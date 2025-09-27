@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - SAMS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="fas fa-user-graduate"></i> Student Dashboard</h2>
+        <p class="text-muted">Welcome back, {{ user.get_full_name|default:user.username }}!</p>
+        <hr>
+    </div>
+</div>
+
+<!-- Student Info Card -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if student.profile.profile_picture %}
+                <img src="{{ student.profile.profile_picture.url }}" alt="Profile" class="profile-picture mb-3">
+                {% else %}
+                <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                {% endif %}
+                <h5>{{ user.get_full_name }}</h5>
+                <p class="text-muted">{{ student.student_id }}</p>
+                <p class="small">{{ student.registration_number }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Quick Stats -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-primary text-white dashboard-card">
+                    <div class="card-body text-center">
+                        <h4>{{ total_courses }}</h4>
+                        <p class="mb-0">Enrolled Courses</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success text-white dashboard-card">
+                    <div class="card-body text-center">
+                        <h4>{{ recent_grades.count }}</h4>
+                        <p class="mb-0">Recent Grades</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-info text-white dashboard-card">
+                    <div class="card-body text-center">
+                        <h4>-</h4>
+                        <p class="mb-0">Attendance %</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Current Courses -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card dashboard-card">
+            <div class="card-header">
+                <h5><i class="fas fa-book"></i> Current Courses</h5>
+            </div>
+            <div class="card-body">
+                {% if enrollments %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Teacher</th>
+                                <th>Schedule</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                            <tr>
+                                <td><strong>{{ enrollment.section.course.code }}</strong></td>
+                                <td>{{ enrollment.section.course.name }}</td>
+                                <td>{{ enrollment.section.teacher.profile.user.get_full_name }}</td>
+                                <td>{{ enrollment.section.schedule|default:"TBA" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No courses enrolled yet.</p>
+                    <a href="#" class="btn btn-primary">Browse Courses (Coming Soon)</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line"></i> Recent Grades</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_grades %}
+                <div class="list-group list-group-flush">
+                    {% for grade in recent_grades %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted">{{ grade.section.course.code }}</small>
+                            <br>
+                            <strong>{{ grade.letter_grade }}</strong>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ grade.numerical_grade }}%</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-sm btn-outline-primary">View All (Coming Soon)</a>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-chart-line fa-2x text-muted mb-2"></i>
+                    <p class="text-muted">No grades available yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="#" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-search"></i> Browse Courses
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="#" class="btn btn-outline-success w-100">
+                            <i class="fas fa-chart-bar"></i> View Grades
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="#" class="btn btn-outline-info w-100">
+                            <i class="fas fa-calendar-check"></i> Attendance
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="#" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-file-alt"></i> Transcript
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Students - SAMS{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-users"></i> Manage Students</h2>
+                <p class="text-muted">View and manage all registered students</p>
+            </div>
+            <a href="{% url 'accounts:add_student' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Student
+            </a>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-list"></i> Student List</h5>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="text" class="form-control" placeholder="Search students..." id="studentSearch">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if students %}
+                <div class="table-responsive">
+                    <table class="table table-hover" id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Registration No.</th>
+                                <th>Admission Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in students %}
+                            <tr>
+                                <td><strong>{{ student.student_id }}</strong></td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if student.profile.profile_picture %}
+                                        <img src="{{ student.profile.profile_picture.url }}" alt="Profile" class="rounded-circle me-2" width="32" height="32">
+                                        {% else %}
+                                        <i class="fas fa-user-circle fa-2x text-muted me-2"></i>
+                                        {% endif %}
+                                        <div>
+                                            <strong>{{ student.profile.user.get_full_name }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ student.profile.user.username }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ student.profile.user.email }}</td>
+                                <td>{{ student.registration_number }}</td>
+                                <td>{{ student.admission_date|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if student.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-outline-primary" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination placeholder -->
+                <nav aria-label="Students pagination" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">1</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-graduate fa-4x text-muted mb-3"></i>
+                    <h4>No Students Found</h4>
+                    <p class="text-muted">There are no registered students in the system yet.</p>
+                    <a href="{% url 'accounts:add_student' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add First Student
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <h4>{{ students.count }}</h4>
+                <p class="mb-0">Total Students</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h4>{{ students|length }}</h4>
+                <p class="mb-0">Active Students</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <h4>0</h4>
+                <p class="mb-0">New This Month</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <h4>0</h4>
+                <p class="mb-0">Pending</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Simple search functionality
+document.getElementById('studentSearch').addEventListener('keyup', function() {
+    var searchTerm = this.value.toLowerCase();
+    var tableRows = document.querySelectorAll('#studentsTable tbody tr');
+    
+    tableRows.forEach(function(row) {
+        var text = row.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

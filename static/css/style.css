@@ -1,0 +1,276 @@
+/* Custom CSS for SAMS */
+
+:root {
+    --primary-color: #4a4a7a;
+    --primary-gradient: linear-gradient(135deg, #4a4a7a 0%, #6b5b8f 50%, #7d6aa8 100%);
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+    overflow-x: hidden;
+}
+
+/* Scrollbar styling for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6b5b8f;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #3a3a6a 0%, #5b4b7f 50%, #6d5a98 100%);
+    border: none;
+    transform: translateY(-2px);
+    transition: all 0.2s;
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    transition: all 0.2s;
+}
+
+.btn-outline-success:hover,
+.btn-outline-info:hover,
+.btn-outline-warning:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s;
+}
+
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(74, 74, 122, 0.25);
+}
+
+.alert {
+    border-radius: 5px;
+    border: none;
+}
+
+.badge {
+    font-size: 0.8em;
+    padding: 0.5em;
+}
+
+/* Dashboard Cards */
+.card-footer {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-top: none;
+}
+
+.card-footer a {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Profile Picture */
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar for forms */
+.sidebar {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+/* Grade colors */
+.grade-a { color: #28a745; font-weight: bold; }
+.grade-b { color: #17a2b8; font-weight: bold; }
+.grade-c { color: #ffc107; font-weight: bold; }
+.grade-d { color: #fd7e14; font-weight: bold; }
+.grade-f { color: #dc3545; font-weight: bold; }
+
+/* Attendance colors */
+.attendance-present { color: #28a745; }
+.attendance-absent { color: #dc3545; }
+.attendance-late { color: #ffc107; }
+.attendance-excused { color: #17a2b8; }
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0.5rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, .btn, .card-footer {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000;
+        box-shadow: none;
+    }
+}
+
+/* Animation classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Consistent theme colors */
+.bg-primary {
+    background: var(--primary-gradient) !important;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.border-primary {
+    border-color: var(--primary-color) !important;
+}
+
+/* Enhanced card styling */
+.card-header {
+    background: var(--primary-gradient);
+    color: white;
+    border-bottom: none;
+}
+
+/* Navbar dropdown styling */
+.navbar-nav .dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+/* Main content area enhancements */
+.container-fluid {
+    min-height: calc(100vh - 200px);
+}
+
+/* Dashboard enhancements */
+.dashboard-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
