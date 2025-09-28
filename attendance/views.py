@@ -59,14 +59,26 @@ def section_attendance_view(request, section_id):
     """
     View attendance records for a specific section.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied. Teacher account required.')
         return redirect('accounts:dashboard')
     
-    section = get_object_or_404(Section, id=section_id, teacher=request.user.teacher_profile)
+    section = get_object_or_404(Section, id=section_id, teacher=teacher)
     
     # Get all sessions for this section
     sessions = AttendanceSession.objects.filter(section=section).order_by('-date')
+    
+    # Add attendance counts for each session
+    sessions_with_counts = []
+    for session in sessions:
+        attendance_records = Attendance.objects.filter(session=session)
+        session.present_count = attendance_records.filter(status='present').count()
+        session.absent_count = attendance_records.filter(status='absent').count()
+        session.late_count = attendance_records.filter(status='late').count()
+        session.excused_count = attendance_records.filter(status='excused').count()
+        sessions_with_counts.append(session)
     
     # Get attendance summaries for all students in this section
     attendance_summaries = AttendanceSummary.objects.filter(
@@ -74,7 +86,7 @@ def section_attendance_view(request, section_id):
     ).select_related('student__profile__user').order_by('student__profile__user__last_name')
     
     # Get recent attendance sessions
-    recent_sessions = sessions[:10]
+    recent_sessions = sessions_with_counts[:10]
     
     # Calculate section statistics
     total_students = Enrollment.objects.filter(section=section, status='enrolled').count()
@@ -89,7 +101,7 @@ def section_attendance_view(request, section_id):
     ).count()
     
     # Pagination for sessions
-    paginator = Paginator(sessions, 20)
+    paginator = Paginator(sessions_with_counts, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -111,11 +123,12 @@ def teacher_attendance_sections_view(request):
     """
     Display teacher's sections for attendance management with real data.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied. Teacher account required.')
         return redirect('accounts:dashboard')
     
-    teacher = request.user.teacher_profile
     sections = Section.objects.filter(teacher=teacher).select_related('course', 'semester')
     
     # Calculate statistics
@@ -187,11 +200,13 @@ def mark_attendance_view(request, section_id):
     """
     Mark attendance for a specific section.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied. Teacher account required.')
         return redirect('accounts:dashboard')
     
-    section = get_object_or_404(Section, id=section_id, teacher=request.user.teacher_profile)
+    section = get_object_or_404(Section, id=section_id, teacher=teacher)
     
     if request.method == 'POST':
         # Create or get attendance session
@@ -200,6 +215,10 @@ def mark_attendance_view(request, section_id):
         end_time = request.POST.get('end_time')
         topic_covered = request.POST.get('topic_covered', '')
         notes = request.POST.get('session_notes', '')
+        
+        # Handle empty time fields
+        start_time = start_time if start_time and start_time.strip() else None
+        end_time = end_time if end_time and end_time.strip() else None
         
         session, created = AttendanceSession.objects.get_or_create(
             section=section,
@@ -212,7 +231,7 @@ def mark_attendance_view(request, section_id):
             }
         )
         
-        if not created and session.end_time != end_time:
+        if not created:
             session.end_time = end_time
             session.topic_covered = topic_covered
             session.notes = notes
@@ -227,13 +246,16 @@ def mark_attendance_view(request, section_id):
             arrival_time = request.POST.get(f'arrival_time_{student_id}')
             student_notes = request.POST.get(f'notes_{student_id}', '')
             
+            # Handle empty arrival_time field
+            arrival_time = arrival_time if arrival_time and arrival_time.strip() else None
+            
             # Create or update attendance record
             attendance, created = Attendance.objects.update_or_create(
                 student=enrollment.student,
                 session=session,
                 defaults={
                     'status': status,
-                    'arrival_time': arrival_time if arrival_time else None,
+                    'arrival_time': arrival_time,
                     'notes': student_notes,
                     'marked_by': request.user.get_full_name() or request.user.username
                 }
@@ -275,11 +297,13 @@ def attendance_history_view(request, section_id):
     """
     View detailed attendance history for a section.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied. Teacher account required.')
         return redirect('accounts:dashboard')
     
-    section = get_object_or_404(Section, id=section_id, teacher=request.user.teacher_profile)
+    section = get_object_or_404(Section, id=section_id, teacher=teacher)
     
     # Get all sessions and attendance records
     sessions = AttendanceSession.objects.filter(section=section).order_by('-date')
@@ -315,11 +339,11 @@ def attendance_reports_view(request):
     """
     Generate attendance reports for teachers.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied. Teacher account required.')
         return redirect('accounts:dashboard')
-    
-    teacher = request.user.teacher_profile
     sections = Section.objects.filter(teacher=teacher)
     
     # Filter by section if specified
@@ -356,11 +380,13 @@ def export_attendance_csv(request, section_id):
     """
     Export attendance data as CSV file.
     """
-    if not hasattr(request.user, 'teacher_profile'):
+    try:
+        teacher = request.user.profile.teacher
+    except:
         messages.error(request, 'Access denied.')
         return redirect('accounts:dashboard')
     
-    section = get_object_or_404(Section, id=section_id, teacher=request.user.teacher_profile)
+    section = get_object_or_404(Section, id=section_id, teacher=teacher)
     
     import csv
     

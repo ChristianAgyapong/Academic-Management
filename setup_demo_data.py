@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-CTA Demo Data Setup Script
+SAMS Demo Data Setup Script
 Creates comprehensive demo data including admin users, students, teachers, courses, and more.
 """
 
@@ -30,7 +30,7 @@ def create_admin_users():
     if not User.objects.filter(username='admin').exists():
         admin_user = User.objects.create_superuser(
             username='admin',
-            email='admin@cta.com',
+            email='admin@sams.com',
             password='admin123',
             first_name='System',
             last_name='Administrator'
@@ -221,7 +221,7 @@ def create_demo_students():
                 user=user,
                 role='student',
                 phone_number=student_data['phone'],
-                address='Student Hostel, Chrix Tech Academic'
+                address='Student Hostel, University of Ghana'
             )
             
             # Create student record
@@ -482,7 +482,7 @@ def create_demo_attendance():
 def print_demo_credentials():
     """Print all demo login credentials"""
     print("\n" + "="*80)
-    print("🎓 CTA DEMO SYSTEM - LOGIN CREDENTIALS")
+    print("🎓 SAMS DEMO SYSTEM - LOGIN CREDENTIALS")
     print("="*80)
     
     print("\n👑 ADMIN ACCESS:")
@@ -490,7 +490,7 @@ def print_demo_credentials():
     print("🔗 Admin Panel: http://127.0.0.1:8000/admin/")
     print("👤 Username: admin")
     print("🔑 Password: admin123")
-    print("📧 Email: admin@cta.com")
+    print("📧 Email: admin@sams.com")
     
     print("\n📚 TEACHER ACCOUNTS:")
     print("-" * 40)
@@ -534,7 +534,7 @@ def print_demo_credentials():
 
 def main():
     """Main setup function"""
-    print("🚀 Setting up CTA Demo Data...")
+    print("🚀 Setting up SAMS Demo Data...")
     print("=" * 50)
     
     try:

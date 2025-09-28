@@ -35,7 +35,7 @@ except User.DoesNotExist:
     # Create admin user
     admin = User.objects.create_superuser(
         username='admin',
-        email='admin@cta.com',
+        email='admin@sams.com',
         password='admin123'
     )
     print("✅ Admin user created successfully!")

@@ -1,0 +1,437 @@
+{% extends 'base.html' %}
+
+{% block title %}Mark Attendance - {{ section.course.code }} - Chrix Tech Academic{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d1b2e 50%, #8b1538 100%);
+        color: #ffffff;
+        min-height: 100vh;
+    }
+
+    .attendance-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-item a {
+        color: #ffcccb;
+        text-decoration: none;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #ffffff;
+    }
+
+    .breadcrumb-item.active {
+        color: #ffffff;
+    }
+
+    .section-header {
+        border-bottom: 2px solid #dc3545;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+
+    .section-subtitle {
+        color: #ffcccb;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .session-form {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .form-label {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        border-radius: 8px;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        color: #ffffff;
+    }
+
+    .form-control::placeholder {
+        color: #ffcccb;
+        opacity: 0.8;
+    }
+
+    .attendance-table {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table {
+        color: #ffffff;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background: rgba(220, 53, 69, 0.3);
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        padding: 15px;
+    }
+
+    .table td {
+        border-color: rgba(255, 255, 255, 0.1);
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .attendance-radio {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .radio-option input[type="radio"] {
+        margin: 0;
+    }
+
+    .radio-option label {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+    .btn-teacher {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-teacher:hover {
+        background: linear-gradient(45deg, #c82333, #a71e2a);
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-secondary-teacher {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .btn-secondary-teacher:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .student-id {
+        color: #ffcccb;
+        font-size: 0.9rem;
+    }
+
+    .time-input {
+        max-width: 120px;
+    }
+
+    .notes-input {
+        min-height: 60px;
+        resize: vertical;
+    }
+
+    .status-present { color: #28a745; }
+    .status-absent { color: #dc3545; }
+    .status-late { color: #ffc107; }
+    .status-excused { color: #17a2b8; }
+
+    .alert-teacher {
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.3);
+        color: #ffcccb;
+        border-radius: 8px;
+    }
+
+    .quick-mark-buttons {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .quick-mark-buttons .btn {
+        margin: 0 5px;
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'accounts:dashboard' %}">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'attendance:teacher_attendance_sections' %}">
+                    <i class="fas fa-user-check me-1"></i>Attendance Management
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-plus me-1"></i>Mark Attendance
+            </li>
+        </ol>
+    </nav>
+
+    <div class="attendance-container">
+        <!-- Section Header -->
+        <div class="section-header">
+            <h1 class="section-title">
+                <i class="fas fa-user-check me-3"></i>Mark Attendance
+            </h1>
+            <p class="section-subtitle">{{ section.course.name }} ({{ section.course.code }}-{{ section.section_number }})</p>
+        </div>
+
+        <form method="post" id="attendanceForm">
+            {% csrf_token %}
+            
+            <!-- Session Information -->
+            <div class="session-form">
+                <h5 class="mb-3" style="color: #ffffff;">
+                    <i class="fas fa-calendar-day me-2"></i>Session Information
+                </h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="session_date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="session_date" name="session_date" 
+                               value="{{ current_date|date:'Y-m-d' }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="start_time" class="form-label">Start Time</label>
+                        <input type="time" class="form-control time-input" id="start_time" name="start_time" 
+                               value="{{ today_session.start_time|default:current_time }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_time" class="form-label">End Time</label>
+                        <input type="time" class="form-control time-input" id="end_time" name="end_time" 
+                               value="{{ today_session.end_time|default:'' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="topic_covered" class="form-label">Topic Covered</label>
+                        <input type="text" class="form-control" id="topic_covered" name="topic_covered" 
+                               value="{{ today_session.topic_covered|default:'' }}" placeholder="Brief description">
+                    </div>
+                </div>
+                
+                <div class="row g-3 mt-2">
+                    <div class="col-12">
+                        <label for="session_notes" class="form-label">Session Notes</label>
+                        <textarea class="form-control notes-input" id="session_notes" name="session_notes" 
+                                  placeholder="Additional notes about this session">{{ today_session.notes|default:'' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Mark Buttons -->
+            <div class="quick-mark-buttons">
+                <button type="button" class="btn btn-success" onclick="markAllAs('present')">
+                    <i class="fas fa-check-circle me-1"></i>Mark All Present
+                </button>
+                <button type="button" class="btn btn-danger" onclick="markAllAs('absent')">
+                    <i class="fas fa-times-circle me-1"></i>Mark All Absent
+                </button>
+                <button type="button" class="btn btn-warning" onclick="clearAll()">
+                    <i class="fas fa-eraser me-1"></i>Clear All
+                </button>
+            </div>
+
+            <!-- Attendance Table -->
+            {% if students %}
+                <div class="attendance-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Student</th>
+                                <th style="width: 30%;">Attendance Status</th>
+                                <th style="width: 15%;">Arrival Time</th>
+                                <th style="width: 30%;">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in students %}
+                                <tr>
+                                    <td>
+                                        <div class="student-name">{{ enrollment.student.profile.user.get_full_name|default:enrollment.student.profile.user.username }}</div>
+                                        <div class="student-id">ID: {{ enrollment.student.profile.user.username }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="attendance-radio">
+                                            <div class="radio-option">
+                                                <input type="radio" name="attendance_{{ enrollment.student.id }}" 
+                                                       value="present" id="present_{{ enrollment.student.id }}">
+                                                <label for="present_{{ enrollment.student.id }}" class="status-present">Present</label>
+                                            </div>
+                                            <div class="radio-option">
+                                                <input type="radio" name="attendance_{{ enrollment.student.id }}" 
+                                                       value="absent" id="absent_{{ enrollment.student.id }}" checked>
+                                                <label for="absent_{{ enrollment.student.id }}" class="status-absent">Absent</label>
+                                            </div>
+                                            <div class="radio-option">
+                                                <input type="radio" name="attendance_{{ enrollment.student.id }}" 
+                                                       value="late" id="late_{{ enrollment.student.id }}">
+                                                <label for="late_{{ enrollment.student.id }}" class="status-late">Late</label>
+                                            </div>
+                                            <div class="radio-option">
+                                                <input type="radio" name="attendance_{{ enrollment.student.id }}" 
+                                                       value="excused" id="excused_{{ enrollment.student.id }}">
+                                                <label for="excused_{{ enrollment.student.id }}" class="status-excused">Excused</label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="time" class="form-control time-input" 
+                                               name="arrival_time_{{ enrollment.student.id }}"
+                                               value="">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" 
+                                               name="notes_{{ enrollment.student.id }}"
+                                               value="" 
+                                               placeholder="Optional notes">
+                                    </td>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Submit Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'attendance:teacher_attendance_sections' %}" class="btn btn-secondary-teacher">
+                        <i class="fas fa-arrow-left me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-teacher" onclick="return confirmSubmit()">
+                        <i class="fas fa-save me-2"></i>Save Attendance
+                    </button>
+                </div>
+            {% else %}
+                <div class="alert alert-teacher">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>No Students Enrolled:</strong> This section has no enrolled students to mark attendance for.
+                </div>
+                <div class="text-center">
+                    <a href="{% url 'attendance:teacher_attendance_sections' %}" class="btn btn-secondary-teacher">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Sections
+                    </a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<script>
+function markAllAs(status) {
+    const radios = document.querySelectorAll(`input[type="radio"][value="${status}"]`);
+    radios.forEach(radio => {
+        radio.checked = true;
+    });
+}
+
+function clearAll() {
+    const absentRadios = document.querySelectorAll('input[type="radio"][value="absent"]');
+    absentRadios.forEach(radio => {
+        radio.checked = true;
+    });
+    
+    // Clear arrival times and notes
+    document.querySelectorAll('input[type="time"]').forEach(input => {
+        input.value = '';
+    });
+    document.querySelectorAll('input[name*="notes_"]').forEach(input => {
+        input.value = '';
+    });
+}
+
+function confirmSubmit() {
+    const presentCount = document.querySelectorAll('input[type="radio"][value="present"]:checked').length;
+    const absentCount = document.querySelectorAll('input[type="radio"][value="absent"]:checked').length;
+    const lateCount = document.querySelectorAll('input[type="radio"][value="late"]:checked').length;
+    const excusedCount = document.querySelectorAll('input[type="radio"][value="excused"]:checked').length;
+    
+    const message = `Confirm attendance submission:\n\nPresent: ${presentCount}\nAbsent: ${absentCount}\nLate: ${lateCount}\nExcused: ${excusedCount}\n\nProceed with saving?`;
+    
+    return confirm(message);
+}
+
+// Auto-set end time when start time changes
+document.getElementById('start_time').addEventListener('change', function() {
+    const startTime = this.value;
+    if (startTime && !document.getElementById('end_time').value) {
+        const [hours, minutes] = startTime.split(':');
+        const endHour = parseInt(hours) + 1; // Add 1 hour
+        document.getElementById('end_time').value = `${endHour.toString().padStart(2, '0')}:${minutes}`;
+    }
+});
+</script>
+{% endblock %}

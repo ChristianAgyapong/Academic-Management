@@ -1,0 +1,467 @@
+{% extends 'base.html' %}
+
+{% block title %}Section Attendance - {{ section.course.code }} - Chrix Tech Academic{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d1b2e 50%, #8b1538 100%);
+        color: #ffffff;
+        min-height: 100vh;
+    }
+
+    .attendance-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-item a {
+        color: #ffcccb;
+        text-decoration: none;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #ffffff;
+    }
+
+    .breadcrumb-item.active {
+        color: #ffffff;
+    }
+
+    .section-header {
+        border-bottom: 2px solid #dc3545;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 5px;
+    }
+
+    .section-subtitle {
+        color: #ffcccb;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .stats-row {
+        margin-bottom: 30px;
+    }
+
+    .stats-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .stats-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .stats-icon {
+        font-size: 2rem;
+        color: #dc3545;
+        margin-bottom: 10px;
+    }
+
+    .stats-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .stats-label {
+        color: #ffcccb;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .table-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .table {
+        color: #ffffff;
+        margin-bottom: 0;
+    }
+
+    .table th {
+        background: rgba(220, 53, 69, 0.3);
+        color: #ffffff;
+        border: none;
+        font-weight: 600;
+        padding: 15px;
+    }
+
+    .table td {
+        border-color: rgba(255, 255, 255, 0.1);
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-teacher {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .btn-teacher:hover {
+        background: linear-gradient(45deg, #c82333, #a71e2a);
+        color: #ffffff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-secondary-teacher {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary-teacher:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        transform: translateY(-1px);
+    }
+
+    .status-excellent { color: #28a745; }
+    .status-good { color: #17a2b8; }
+    .status-warning { color: #ffc107; }
+    .status-poor { color: #dc3545; }
+
+    .progress-bar-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-excellent { background: linear-gradient(45deg, #28a745, #20c997); }
+    .progress-good { background: linear-gradient(45deg, #17a2b8, #20c997); }
+    .progress-warning { background: linear-gradient(45deg, #ffc107, #fd7e14); }
+    .progress-poor { background: linear-gradient(45deg, #dc3545, #e74c3c); }
+
+    .session-date {
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .session-topic {
+        color: #ffcccb;
+        font-size: 0.9rem;
+    }
+
+    .quick-actions {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .pagination {
+        justify-content: center;
+    }
+
+    .page-link {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+    }
+
+    .page-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+    }
+
+    .page-item.active .page-link {
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'accounts:dashboard' %}">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'attendance:teacher_attendance_sections' %}">
+                    <i class="fas fa-user-check me-1"></i>Attendance Management
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-chart-bar me-1"></i>Section Records
+            </li>
+        </ol>
+    </nav>
+
+    <div class="attendance-container">
+        <!-- Section Header -->
+        <div class="section-header">
+            <h1 class="section-title">
+                <i class="fas fa-chart-bar me-3"></i>Section Attendance Records
+            </h1>
+            <p class="section-subtitle">{{ section.course.name }} ({{ section.course.code }}-{{ section.section_number }})</p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <h5 class="mb-0" style="color: #ffffff;">
+                    <i class="fas fa-bolt me-2"></i>Quick Actions
+                </h5>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="{% url 'attendance:mark_attendance' section.id %}" class="btn btn-teacher">
+                        <i class="fas fa-plus me-1"></i>Mark Attendance
+                    </a>
+                    <a href="{% url 'attendance:attendance_history' section.id %}" class="btn btn-secondary-teacher">
+                        <i class="fas fa-history me-1"></i>View History
+                    </a>
+                    <a href="{% url 'attendance:export_attendance' section.id %}" class="btn btn-secondary-teacher">
+                        <i class="fas fa-download me-1"></i>Export CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-row">
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-number">{{ total_students }}</div>
+                        <div class="stats-label">Total Students</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stats-number">{{ total_sessions }}</div>
+                        <div class="stats-label">Sessions Held</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stats-number">{{ avg_attendance }}%</div>
+                        <div class="stats-label">Average Attendance</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stats-number">{{ low_attendance_count }}</div>
+                        <div class="stats-label">Low Attendance</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Attendance Summary -->
+        <div class="table-container">
+            <div class="d-flex justify-content-between align-items-center p-3" style="background: rgba(220, 53, 69, 0.2);">
+                <h5 class="mb-0" style="color: #ffffff;">
+                    <i class="fas fa-users me-2"></i>Student Attendance Summary
+                </h5>
+            </div>
+            
+            {% if attendance_summaries %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Total Sessions</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Late</th>
+                            <th>Excused</th>
+                            <th>Attendance Rate</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for summary in attendance_summaries %}
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">{{ summary.student.profile.user.get_full_name|default:summary.student.profile.user.username }}</div>
+                                    <div style="font-size: 0.8rem; color: #ffcccb;">{{ summary.student.profile.user.username }}</div>
+                                </td>
+                                <td>{{ summary.total_sessions }}</td>
+                                <td><span class="status-excellent">{{ summary.present_count }}</span></td>
+                                <td><span class="status-poor">{{ summary.absent_count }}</span></td>
+                                <td><span class="status-warning">{{ summary.late_count }}</span></td>
+                                <td><span class="status-good">{{ summary.excused_count }}</span></td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="progress-bar-container" style="width: 60px; flex-shrink: 0;">
+                                            <div class="progress-bar 
+                                                {% if summary.attendance_percentage >= 90 %}progress-excellent
+                                                {% elif summary.attendance_percentage >= 75 %}progress-good
+                                                {% elif summary.attendance_percentage >= 60 %}progress-warning
+                                                {% else %}progress-poor{% endif %}"
+                                                 style="width: {{ summary.attendance_percentage }}%;"></div>
+                                        </div>
+                                        <span class="{% if summary.attendance_percentage >= 90 %}status-excellent
+                                                    {% elif summary.attendance_percentage >= 75 %}status-good
+                                                    {% elif summary.attendance_percentage >= 60 %}status-warning
+                                                    {% else %}status-poor{% endif %}">
+                                            {{ summary.attendance_percentage|floatformat:1 }}%
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if summary.attendance_percentage >= 90 %}
+                                        <span class="badge bg-success">Excellent</span>
+                                    {% elif summary.attendance_percentage >= 75 %}
+                                        <span class="badge bg-info">Good</span>
+                                    {% elif summary.attendance_percentage >= 60 %}
+                                        <span class="badge bg-warning">Needs Improvement</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Poor</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="p-4 text-center">
+                    <i class="fas fa-users" style="font-size: 3rem; color: #dc3545; margin-bottom: 15px;"></i>
+                    <h5 style="color: #ffffff;">No Attendance Records</h5>
+                    <p style="color: #ffcccb;">No attendance has been recorded for this section yet.</p>
+                    <a href="{% url 'attendance:mark_attendance' section.id %}" class="btn btn-teacher mt-3">
+                        <i class="fas fa-plus me-2"></i>Start Taking Attendance
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recent Sessions -->
+        {% if recent_sessions %}
+            <div class="table-container">
+                <div class="d-flex justify-content-between align-items-center p-3" style="background: rgba(220, 53, 69, 0.2);">
+                    <h5 class="mb-0" style="color: #ffffff;">
+                        <i class="fas fa-clock me-2"></i>Recent Sessions
+                    </h5>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Topic Covered</th>
+                            <th>Present</th>
+                            <th>Absent</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for session in recent_sessions %}
+                            <tr>
+                                <td>
+                                    <div class="session-date">{{ session.date|date:"M d, Y" }}</div>
+                                </td>
+                                <td>
+                                    <div>{{ session.start_time|time:"g:i A" }}</div>
+                                    {% if session.end_time %}
+                                        <div style="font-size: 0.8rem; color: #ffcccb;">to {{ session.end_time|time:"g:i A" }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="session-topic">{{ session.topic_covered|default:"No topic recorded" }}</div>
+                                </td>
+                                <td>
+                                    <span class="status-excellent">
+                                        {{ session.present_count }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-poor">
+                                        {{ session.absent_count }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="{% url 'attendance:mark_attendance' section.id %}?session={{ session.id }}" 
+                                           class="btn btn-teacher btn-sm">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="{% url 'attendance:teacher_attendance_sections' %}" class="btn btn-secondary-teacher">
+                <i class="fas fa-arrow-left me-2"></i>Back to All Sections
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

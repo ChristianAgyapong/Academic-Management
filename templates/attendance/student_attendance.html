@@ -1,33 +1,406 @@
 {% extends 'base.html' %}
 
-{% block title %}My Attendance - CTA{% endblock %}
+{% block title %}My Attendance - Chrix Tech Academic{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #daa520 100%);
+        color: #ffffff;
+        min-height: 100vh;
+    }
+
+    .attendance-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-header {
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin-bottom: 5px;
+    }
+
+    .page-subtitle {
+        color: #f4e4bc;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .stats-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .stats-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .stats-icon {
+        font-size: 2.5rem;
+        color: #daa520;
+        margin-bottom: 10px;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+    }
+
+    .stats-label {
+        color: #f4e4bc;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .course-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .course-card:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .course-title {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+    }
+
+    .course-code {
+        color: #daa520;
+        font-weight: 500;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .course-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #ffffff;
+        display: block;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #f4e4bc;
+    }
+
+    .progress-container {
+        margin-bottom: 15px;
+    }
+
+    .progress-bar-custom {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.3s ease;
+        position: relative;
+    }
+
+    .progress-excellent { background: linear-gradient(45deg, #28a745, #20c997); }
+    .progress-good { background: linear-gradient(45deg, #17a2b8, #20c997); }
+    .progress-warning { background: linear-gradient(45deg, #ffc107, #fd7e14); }
+    .progress-poor { background: linear-gradient(45deg, #dc3545, #e74c3c); }
+
+    .progress-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .status-excellent { background: #28a745; color: #ffffff; }
+    .status-good { background: #17a2b8; color: #ffffff; }
+    .status-warning { background: #ffc107; color: #000000; }
+    .status-poor { background: #dc3545; color: #ffffff; }
+
+    .recent-attendance {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .attendance-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .attendance-item:last-child {
+        border-bottom: none;
+    }
+
+    .attendance-date {
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .attendance-course {
+        color: #f4e4bc;
+        font-size: 0.9rem;
+    }
+
+    .attendance-status {
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .status-present { background: #28a745; color: #ffffff; }
+    .status-absent { background: #dc3545; color: #ffffff; }
+    .status-late { background: #ffc107; color: #000000; }
+    .status-excused { background: #17a2b8; color: #ffffff; }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #f4e4bc;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #daa520;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2><i class="fas fa-calendar-check"></i> My Attendance</h2>
-        <p class="text-muted">View your attendance records and statistics</p>
-        <hr>
-    </div>
-</div>
+<div class="container-fluid py-4">
+    <div class="attendance-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-calendar-check me-3"></i>My Attendance
+            </h1>
+            <p class="page-subtitle">Track your attendance across all enrolled courses</p>
+        </div>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-user-check fa-4x text-muted mb-4"></i>
-                <h4>Attendance Tracking Feature</h4>
-                <p class="text-muted">This feature is under development and will be available soon!</p>
-                <p class="text-muted">You'll be able to:</p>
-                <ul class="list-unstyled">
-                    <li><i class="fas fa-check text-success"></i> View attendance records</li>
-                    <li><i class="fas fa-check text-success"></i> Track attendance percentage</li>
-                    <li><i class="fas fa-check text-success"></i> View attendance history</li>
-                    <li><i class="fas fa-check text-success"></i> Get attendance reports</li>
-                </ul>
-                <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary mt-3">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
-                </a>
+        <!-- Statistics Overview -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stats-number">{{ total_courses }}</div>
+                    <div class="stats-label">Enrolled Courses</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stats-number">{{ overall_avg }}%</div>
+                    <div class="stats-label">Overall Average</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-thumbs-up"></i>
+                    </div>
+                    <div class="stats-number">{{ good_attendance }}</div>
+                    <div class="stats-label">Good Performance</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="stats-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stats-number">{{ poor_attendance }}</div>
+                    <div class="stats-label">Needs Attention</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Course Attendance Details -->
+        <div class="row">
+            <div class="col-lg-8">
+                <h4 class="mb-4" style="color: #ffffff; font-weight: 600;">
+                    <i class="fas fa-chart-bar me-2"></i>Course Attendance Summary
+                </h4>
+
+                {% if attendance_summaries %}
+                    {% for summary in attendance_summaries %}
+                        <div class="course-card">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <div class="course-title">{{ summary.section.course.name }}</div>
+                                    <div class="course-code">
+                                        {{ summary.section.course.code }}-{{ summary.section.section_number }} | 
+                                        {{ summary.section.teacher.profile.user.get_full_name }}
+                                    </div>
+                                </div>
+                                <span class="status-badge 
+                                    {% if summary.attendance_percentage >= 85 %}status-excellent
+                                    {% elif summary.attendance_percentage >= 75 %}status-good
+                                    {% elif summary.attendance_percentage >= 60 %}status-warning
+                                    {% else %}status-poor{% endif %}">
+                                    {% if summary.attendance_percentage >= 85 %}Excellent
+                                    {% elif summary.attendance_percentage >= 75 %}Good
+                                    {% elif summary.attendance_percentage >= 60 %}Fair
+                                    {% else %}Poor{% endif %}
+                                </span>
+                            </div>
+
+                            <div class="course-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ summary.total_sessions }}</span>
+                                    <div class="stat-label">Total Sessions</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" style="color: #28a745;">{{ summary.present_count }}</span>
+                                    <div class="stat-label">Present</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" style="color: #dc3545;">{{ summary.absent_count }}</span>
+                                    <div class="stat-label">Absent</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" style="color: #ffc107;">{{ summary.late_count }}</span>
+                                    <div class="stat-label">Late</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" style="color: #17a2b8;">{{ summary.excused_count }}</span>
+                                    <div class="stat-label">Excused</div>
+                                </div>
+                            </div>
+
+                            <div class="progress-container">
+                                <div class="progress-bar-custom">
+                                    <div class="progress-fill 
+                                        {% if summary.attendance_percentage >= 85 %}progress-excellent
+                                        {% elif summary.attendance_percentage >= 75 %}progress-good
+                                        {% elif summary.attendance_percentage >= 60 %}progress-warning
+                                        {% else %}progress-poor{% endif %}"
+                                         style="width: {{ summary.attendance_percentage }}%;"></div>
+                                    <div class="progress-text">{{ summary.attendance_percentage|floatformat:1 }}%</div>
+                                </div>
+                            </div>
+
+                            {% if summary.attendance_percentage < 75 %}
+                                <div class="alert alert-warning mt-3" style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); color: #fff3cd;">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>Attendance Alert:</strong> Your attendance is below the required 75% threshold. 
+                                    Please improve your attendance to avoid academic consequences.
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+                        <h5 style="color: #ffffff; margin-bottom: 15px;">No Attendance Records</h5>
+                        <p>You don't have any attendance records yet.</p>
+                        <p>Attendance will appear here once your instructors start taking attendance.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-4">
+                <h4 class="mb-4" style="color: #ffffff; font-weight: 600;">
+                    <i class="fas fa-clock me-2"></i>Recent Attendance
+                </h4>
+
+                <div class="recent-attendance">
+                    {% if recent_attendance %}
+                        {% for record in recent_attendance %}
+                            <div class="attendance-item">
+                                <div>
+                                    <div class="attendance-date">{{ record.session.date|date:"M d, Y" }}</div>
+                                    <div class="attendance-course">{{ record.session.section.course.code }}</div>
+                                </div>
+                                <span class="attendance-status status-{{ record.status }}">
+                                    {{ record.get_status_display }}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times" style="font-size: 2rem; color: #daa520; margin-bottom: 10px;"></i>
+                            <p style="color: #f4e4bc; margin: 0;">No recent attendance records</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Attendance Tips -->
+                <div class="recent-attendance mt-4">
+                    <h6 style="color: #ffffff; margin-bottom: 15px;">
+                        <i class="fas fa-lightbulb me-2"></i>Attendance Tips
+                    </h6>
+                    <ul style="color: #f4e4bc; font-size: 0.9rem; margin: 0; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">Aim for 85% or higher attendance in all courses</li>
+                        <li style="margin-bottom: 8px;">Communicate with instructors about planned absences</li>
+                        <li style="margin-bottom: 8px;">Arrive on time to avoid being marked late</li>
+                        <li style="margin-bottom: 8px;">Keep track of excused absence documentation</li>
+                        <li>Check this dashboard regularly to monitor your progress</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

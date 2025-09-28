@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup calendar demo data for CTA
+Setup calendar demo data for SAMS
 """
 
 import os

@@ -354,73 +354,73 @@
                     <i class="fas fa-list-alt me-2"></i>My Sections
                 </h4>
 
-                <!-- Placeholder for when no sections are available -->
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <h5 style="color: #ffffff; margin-bottom: 15px;">No Sections Available</h5>
-                    <p>You currently have no assigned sections for attendance management.</p>
-                    <p>Once sections are assigned, they will appear here for attendance tracking.</p>
-                    
-                    <div class="alert alert-teacher mt-4">
-                        <i class="fas fa-info-circle me-2"></i>
-                        <strong>Note:</strong> Attendance management integration is in progress. 
-                        Full functionality will be available soon.
-                    </div>
-                </div>
-
-                <!-- Example Section Card (for future implementation) -->
-                <!--
-                <div class="section-card">
-                    <div class="section-header">
-                        <div>
-                            <h5 class="section-title">Introduction to Computer Science</h5>
-                            <div class="section-code">CS101-001 | Fall 2025</div>
+                {% if sections_data %}
+                    {% for section_data in sections_data %}
+                        <div class="section-card">
+                            <div class="section-header">
+                                <div>
+                                    <h5 class="section-title">{{ section_data.section.course.name }}</h5>
+                                    <div class="section-code">{{ section_data.section.course.code }}-{{ section_data.section.section_number }} | {{ section_data.section.semester.name }}</div>
+                                </div>
+                                <span class="badge bg-success">Active</span>
+                            </div>
+                            
+                            <div class="section-info">
+                                <i class="fas fa-clock me-1"></i>{{ section_data.section.schedule|default:"Schedule TBD" }} | 
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ section_data.section.classroom|default:"Room TBD" }}
+                            </div>
+                            
+                            <div class="section-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ section_data.enrolled_students }}</span>
+                                    <div class="stat-label">Enrolled</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ section_data.average_attendance }}%</span>
+                                    <div class="stat-label">Avg Attendance</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ section_data.total_sessions }}</span>
+                                    <div class="stat-label">Sessions Held</div>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value">{{ section_data.low_attendance_alerts }}</span>
+                                    <div class="stat-label">Alerts</div>
+                                </div>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <a href="{% url 'attendance:mark_attendance' section_data.section.id %}" class="btn btn-teacher">
+                                    <i class="fas fa-user-check me-1"></i>Mark Attendance
+                                </a>
+                                <a href="{% url 'attendance:section_attendance' section_data.section.id %}" class="btn btn-secondary-teacher">
+                                    <i class="fas fa-chart-bar me-1"></i>View Records
+                                </a>
+                                <a href="{% url 'attendance:attendance_history' section_data.section.id %}" class="btn btn-secondary-teacher">
+                                    <i class="fas fa-history me-1"></i>History
+                                </a>
+                                <a href="{% url 'attendance:export_attendance' section_data.section.id %}" class="btn btn-secondary-teacher">
+                                    <i class="fas fa-download me-1"></i>Export
+                                </a>
+                            </div>
                         </div>
-                        <span class="badge bg-success">Active</span>
-                    </div>
-                    
-                    <div class="section-info">
-                        <i class="fas fa-clock me-1"></i>MWF 10:00 AM - 11:00 AM | 
-                        <i class="fas fa-map-marker-alt me-1"></i>Room 101
-                    </div>
-                    
-                    <div class="section-stats">
-                        <div class="stat-item">
-                            <span class="stat-value">45</span>
-                            <div class="stat-label">Enrolled</div>
+                    {% endfor %}
+                {% else %}
+                    <!-- Placeholder for when no sections are available -->
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-clipboard-list"></i>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-value">87%</span>
-                            <div class="stat-label">Avg Attendance</div>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">12</span>
-                            <div class="stat-label">Sessions Held</div>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-value">3</span>
-                            <div class="stat-label">Alerts</div>
+                        <h5 style="color: #ffffff; margin-bottom: 15px;">No Sections Available</h5>
+                        <p>You currently have no assigned sections for attendance management.</p>
+                        <p>Once sections are assigned, they will appear here for attendance tracking.</p>
+                        
+                        <div class="alert alert-teacher mt-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Note:</strong> Contact your administrator to get sections assigned for attendance management.
                         </div>
                     </div>
-                    
-                    <div class="action-buttons">
-                        <a href="#" class="btn btn-teacher">
-                            <i class="fas fa-user-check me-1"></i>Mark Attendance
-                        </a>
-                        <a href="#" class="btn btn-secondary-teacher">
-                            <i class="fas fa-chart-bar me-1"></i>View Reports
-                        </a>
-                        <a href="#" class="btn btn-secondary-teacher">
-                            <i class="fas fa-history me-1"></i>Attendance History
-                        </a>
-                        <a href="#" class="btn btn-secondary-teacher">
-                            <i class="fas fa-cog me-1"></i>Settings
-                        </a>
-                    </div>
-                </div>
-                -->
+                {% endif %}
             </div>
         </div>
     </div>

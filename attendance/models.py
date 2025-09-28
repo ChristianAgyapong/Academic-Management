@@ -7,8 +7,8 @@ from courses.models import Section
 class AttendanceSession(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     topic_covered = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -19,7 +19,7 @@ class AttendanceSession(models.Model):
     class Meta:
         verbose_name = "Attendance Session"
         verbose_name_plural = "Attendance Sessions"
-        unique_together = ['section', 'date', 'start_time']
+        unique_together = ['section', 'date']
 
 class Attendance(models.Model):
     STATUS_CHOICES = [
