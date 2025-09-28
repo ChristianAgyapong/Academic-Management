@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Teaching Sections - CTA Faculty Portal{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Professional Teacher Portal Styling */
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        min-height: 100vh;
+    }
+    
+    .faculty-header {
+        background: linear-gradient(45deg, #2c1810, #8b0000, #1a1a2e);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+    }
+    
+    .faculty-badge {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #8b0000;
+        border-radius: 15px;
+        padding: 0.5rem 1rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    
+    .stats-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        border-left: 5px solid #8b0000;
+        margin-bottom: 1rem;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #8b0000;
+    }
+    
+    .section-card {
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        border-left: 5px solid #8b0000;
+        transition: all 0.3s ease;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    }
+    
+    .section-header {
+        border-bottom: 2px solid #f8f9fa;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .course-code {
+        background: linear-gradient(45deg, #8b0000, #b22222);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .section-title {
+        color: #1a1a2e;
+        font-weight: 700;
+        margin: 0.5rem 0;
+    }
+    
+    .enrollment-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    .btn-faculty {
+        background: linear-gradient(45deg, #8b0000, #b22222);
+        border: none;
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-faculty:hover {
+        background: linear-gradient(45deg, #6d0000, #8b0000);
+        transform: translateY(-2px);
+        color: white;
+    }
+    
+    .btn-outline-faculty {
+        border: 2px solid #8b0000;
+        color: #8b0000;
+        background: transparent;
+        padding: 0.5rem 1.2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-faculty:hover {
+        background: #8b0000;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .student-list {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .student-item {
+        background: white;
+        border-radius: 8px;
+        padding: 0.8rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: between;
+        align-items: center;
+    }
+    
+    .no-sections {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 3rem;
+        margin: 2rem 0;
+    }
+    
+    .cta-logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #8b0000, #ff6b6b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .breadcrumb {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 0.8rem 1.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .breadcrumb-item.active {
+        color: #8b0000;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Faculty Portal Header -->
+<div class="faculty-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <div class="faculty-badge">
+                    <i class="fas fa-chalkboard-teacher me-2"></i>
+                    Faculty Command Center
+                </div>
+                <h1 class="display-6 mb-0">
+                    <i class="fas fa-list-alt me-3"></i>
+                    My Teaching Sections
+                </h1>
+                <p class="lead mb-0 opacity-75">
+                    Manage your classes and student enrollment - CTA Faculty Portal
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="cta-logo">
+                    Chrix Tech Academic
+                </div>
+                <div class="text-white-50">Faculty Portal</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'accounts:dashboard' %}" class="text-decoration-none">
+                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-list-alt me-1"></i>My Sections
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Statistics Overview -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ total_sections }}</div>
+                <h5 class="text-muted mb-0">
+                    <i class="fas fa-chalkboard me-2"></i>Total Sections
+                </h5>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stats-card text-center">
+                <div class="stats-number">{{ total_students }}</div>
+                <h5 class="text-muted mb-0">
+                    <i class="fas fa-users me-2"></i>Total Students
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    {% if sections_data %}
+        <!-- Sections List -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="text-white mb-4">
+                    <i class="fas fa-graduation-cap me-2"></i>
+                    Your Teaching Sections
+                </h3>
+                
+                {% for data in sections_data %}
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="course-code me-3">
+                                        {{ data.section.course.code }}
+                                    </span>
+                                    <span class="enrollment-badge">
+                                        <i class="fas fa-users me-1"></i>
+                                        {{ data.enrollment_count }} Students
+                                    </span>
+                                </div>
+                                <h4 class="section-title">
+                                    {{ data.section.course.name }}
+                                </h4>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-layer-group me-2"></i>
+                                    Section: {{ data.section.section_name }} | 
+                                    <i class="fas fa-calendar me-2"></i>
+                                    {{ data.section.semester }} {{ data.section.year }}
+                                </p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    {{ data.section.course.description|truncatewords:20 }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="btn-group-vertical" role="group">
+                                    <a href="{% url 'mark_attendance' data.section.id %}" 
+                                       class="btn btn-faculty mb-2">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        Mark Attendance
+                                    </a>
+                                    <a href="{% url 'add_grade' data.section.id %}" 
+                                       class="btn btn-outline-faculty mb-2">
+                                        <i class="fas fa-star me-2"></i>
+                                        Add Grades
+                                    </a>
+                                    <a href="{% url 'section_details' data.section.id %}" 
+                                       class="btn btn-outline-faculty">
+                                        <i class="fas fa-eye me-2"></i>
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if data.enrollments %}
+                    <div class="mt-3">
+                        <h6 class="text-dark">
+                            <i class="fas fa-user-graduate me-2"></i>
+                            Enrolled Students ({{ data.enrollment_count }})
+                        </h6>
+                        <div class="student-list">
+                            {% for enrollment in data.enrollments %}
+                            <div class="student-item">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-user-circle me-3 text-muted"></i>
+                                    <div>
+                                        <strong>{{ enrollment.student.profile.first_name }} {{ enrollment.student.profile.last_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">ID: {{ enrollment.student.student_id }}</small>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check me-1"></i>
+                                        {{ enrollment.status|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- No Sections Message -->
+        <div class="no-sections">
+            <div class="row justify-content-center">
+                <div class="col-md-8 text-center">
+                    <i class="fas fa-chalkboard-teacher text-muted mb-4" style="font-size: 4rem;"></i>
+                    <h3 class="text-dark mb-3">No Teaching Sections Assigned</h3>
+                    <p class="text-muted lead mb-4">
+                        You don't have any sections assigned for teaching yet. 
+                        Contact the academic administrator to get your teaching assignments.
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'teacher_dashboard' %}" class="btn btn-faculty">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Back to Dashboard
+                        </a>
+                        <a href="{% url 'browse_courses' %}" class="btn btn-outline-faculty">
+                            <i class="fas fa-search me-2"></i>
+                            Browse Courses
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+    <!-- Quick Actions Panel -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="stats-card">
+                <h5 class="text-dark mb-3">
+                    <i class="fas fa-bolt me-2"></i>
+                    Quick Faculty Actions
+                </h5>
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'browse_courses' %}" class="btn btn-outline-faculty w-100">
+                            <i class="fas fa-book me-2"></i>
+                            All Courses
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'view_attendance' %}" class="btn btn-outline-faculty w-100">
+                            <i class="fas fa-calendar-check me-2"></i>
+                            Attendance Reports
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'view_grades' %}" class="btn btn-outline-faculty w-100">
+                            <i class="fas fa-chart-line me-2"></i>
+                            Grade Reports
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'teacher_dashboard' %}" class="btn btn-faculty w-100">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            Faculty Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="text-center py-4 mt-5">
+    <div class="container">
+        <p class="text-white-50 mb-0">
+            <i class="fas fa-graduation-cap me-2"></i>
+            Chrix Tech Academic (CTA) Faculty Portal - Empowering Excellence in Education
+        </p>
+    </div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth animations for card hover effects
+    const cards = document.querySelectorAll('.section-card, .stats-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s ease';
+        });
+    });
+    
+    // Add loading states for action buttons
+    const actionButtons = document.querySelectorAll('.btn-faculty, .btn-outline-faculty');
+    actionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Loading...';
+            this.disabled = true;
+            
+            // Re-enable after a short delay (in case navigation is prevented)
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 3000);
+        });
+    });
+    
+    console.log('CTA Faculty Sections Portal - Ready for Excellence');
+});
+</script>
+{% endblock %}

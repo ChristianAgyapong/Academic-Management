@@ -221,7 +221,7 @@ def create_demo_students():
                 user=user,
                 role='student',
                 phone_number=student_data['phone'],
-                address='Student Residence, Chrix Tech Academic'
+                address='Student Hostel, Chrix Tech Academic'
             )
             
             # Create student record

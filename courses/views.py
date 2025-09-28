@@ -561,8 +561,37 @@ def assignments_view(request, section_id):
 
 @login_required
 def teacher_sections_view(request):
-    # Placeholder - implement teacher sections view
-    return render(request, 'courses/teacher_sections.html', {})
+    # Get sections for the logged-in teacher
+    try:
+        teacher = Teacher.objects.get(profile=request.user.profile)
+        sections = Section.objects.filter(teacher=teacher)
+        
+        # Calculate statistics for each section
+        sections_data = []
+        for section in sections:
+            enrollments = Enrollment.objects.filter(section=section, status='enrolled')
+            sections_data.append({
+                'section': section,
+                'enrollment_count': enrollments.count(),
+                'enrollments': enrollments
+            })
+            
+        context = {
+            'teacher': teacher,
+            'sections_data': sections_data,
+            'total_sections': sections.count(),
+            'total_students': sum(data['enrollment_count'] for data in sections_data)
+        }
+        
+    except Teacher.DoesNotExist:
+        messages.error(request, 'Teacher profile not found.')
+        context = {
+            'sections_data': [],
+            'total_sections': 0,
+            'total_students': 0
+        }
+    
+    return render(request, 'courses/teacher_sections.html', context)
 
 @login_required
 def teacher_section_detail_view(request, section_id):
