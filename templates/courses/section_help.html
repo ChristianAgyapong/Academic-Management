@@ -1,0 +1,153 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+<!-- Getting Started -->
+<div class="content-card">
+    <div class="card-header">
+        Getting Started
+    </div>
+    <div class="card-body">
+        <h5>Welcome to the Academic Management System</h5>
+        <p>This system helps you manage your course activities. Here's how to get started:</p>
+        <ul class="list-unstyled">
+            <li class="py-1">🏠 <strong>Overview:</strong> View course information and recent activity</li>
+            <li class="py-1">📢 <strong>Announcements:</strong> Check for important course updates</li>
+            <li class="py-1">📚 <strong>Resources:</strong> Access course materials and documents</li>
+            <li class="py-1">📝 <strong>Assignments:</strong> Submit assignments and view feedback</li>
+            <li class="py-1">📊 <strong>Gradebook:</strong> Track your academic progress</li>
+            <li class="py-1">💬 <strong>Discussions:</strong> Participate in class discussions</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Common Tasks -->
+<div class="content-card">
+    <div class="card-header">
+        Common Tasks
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>For Students:</h6>
+                <ul class="list-unstyled small">
+                    <li>• View assignment due dates</li>
+                    <li>• Submit assignments online</li>
+                    <li>• Check grades and feedback</li>
+                    <li>• Participate in discussions</li>
+                    <li>• Download course materials</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>For Instructors:</h6>
+                <ul class="list-unstyled small">
+                    <li>• Post announcements</li>
+                    <li>• Upload course resources</li>
+                    <li>• Create assignments</li>
+                    <li>• Grade student work</li>
+                    <li>• View class roster</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Technical Support -->
+<div class="content-card">
+    <div class="card-header">
+        Technical Support
+    </div>
+    <div class="card-body">
+        <p>Need help with the system? Contact our support team:</p>
+        <ul class="list-unstyled">
+            <li>📧 Email: support@ug.edu.gh</li>
+            <li>📞 Phone: +233 (0) 30 213 7400</li>
+            <li>🕒 Hours: Monday - Friday, 8:00 AM - 5:00 PM</li>
+            <li>🌐 Help Desk: <a href="#">Online Support Portal</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- System Requirements -->
+<div class="content-card">
+    <div class="card-header">
+        System Requirements
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Supported Browsers:</h6>
+                <ul class="list-unstyled small">
+                    <li>• Chrome 90+</li>
+                    <li>• Firefox 88+</li>
+                    <li>• Safari 14+</li>
+                    <li>• Edge 90+</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>Required Features:</h6>
+                <ul class="list-unstyled small">
+                    <li>• JavaScript enabled</li>
+                    <li>• Cookies enabled</li>
+                    <li>• Pop-up blocker disabled</li>
+                    <li>• Internet connection</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ -->
+<div class="content-card">
+    <div class="card-header">
+        Frequently Asked Questions
+    </div>
+    <div class="card-body">
+        <div class="accordion" id="faqAccordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h6 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne">
+                            How do I submit an assignment?
+                        </button>
+                    </h6>
+                </div>
+                <div id="collapseOne" class="collapse" data-parent="#faqAccordion">
+                    <div class="card-body small">
+                        Go to Assignments, click on the assignment title, and use the submission area to upload your file or enter text.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h6 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo">
+                            How do I check my grades?
+                        </button>
+                    </h6>
+                </div>
+                <div id="collapseTwo" class="collapse" data-parent="#faqAccordion">
+                    <div class="card-body small">
+                        Visit the Gradebook section to view all your grades, assignment feedback, and overall progress.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h6 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree">
+                            I forgot my password. What do I do?
+                        </button>
+                    </h6>
+                </div>
+                <div id="collapseThree" class="collapse" data-parent="#faqAccordion">
+                    <div class="card-body small">
+                        Use the "Forgot Password" link on the login page, or contact technical support for assistance.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

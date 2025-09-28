@@ -1,0 +1,237 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Course Syllabus Card -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-list-alt me-2"></i>
+            Course Syllabus
+        </div>
+        
+        <div class="card-content">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="info-card">
+                        <h3><i class="fas fa-info-circle me-2"></i>Course Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Course Code:</strong> <span class="badge-custom">{{ section.course.code }}</span></p>
+                                <p><strong>Course Title:</strong> {{ section.course.name }}</p>
+                                <p><strong>Credits:</strong> {{ section.course.credits }} Credit Hours</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Department:</strong> {{ section.course.department }}</p>
+                                <p><strong>Instructor:</strong> {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-book me-2"></i>Course Description</h3>
+                        <p class="lead">{{ section.course.description|default:"Course description will be available soon." }}</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-target me-2"></i>Learning Objectives</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start mb-3">
+                                    <div class="bg-primary rounded-circle p-2 me-3" style="min-width: 40px;">
+                                        <i class="fas fa-lightbulb text-white"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Understand</strong> fundamental concepts in {{ section.course.name }}
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start mb-3">
+                                    <div class="bg-success rounded-circle p-2 me-3" style="min-width: 40px;">
+                                        <i class="fas fa-cogs text-white"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Apply</strong> theoretical knowledge to practical scenarios
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start mb-3">
+                                    <div class="bg-warning rounded-circle p-2 me-3" style="min-width: 40px;">
+                                        <i class="fas fa-brain text-white"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Develop</strong> critical thinking and problem-solving skills
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start mb-3">
+                                    <div class="bg-info rounded-circle p-2 me-3" style="min-width: 40px;">
+                                        <i class="fas fa-certificate text-white"></i>
+                                    </div>
+                                    <div>
+                                        <strong>Demonstrate</strong> proficiency in course-related tasks and assessments
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-calendar-alt me-2"></i>Course Schedule</h3>
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3 rounded" style="background: var(--ug-light-blue); border: 2px solid var(--ug-blue);">
+                                    <i class="fas fa-clock fa-2x mb-2" style="color: var(--ug-blue);"></i>
+                                    <h6>Schedule</h6>
+                                    <small>{{ section.schedule|default:"TBA" }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3 rounded" style="background: var(--ug-light-red); border: 2px solid var(--ug-red);">
+                                    <i class="fas fa-map-marker-alt fa-2x mb-2" style="color: var(--ug-red);"></i>
+                                    <h6>Location</h6>
+                                    <small>{{ section.classroom|default:"TBA" }}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="p-3 rounded" style="background: #fff3cd; border: 2px solid var(--ug-gold);">
+                                    <i class="fas fa-calendar fa-2x mb-2" style="color: var(--ug-red);"></i>
+                                    <h6>Semester</h6>
+                                    <small>{{ section.semester.name }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-clipboard-check me-2"></i>Assessment Methods</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Assessment Type</th>
+                                    <th>Percentage</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Assignments</td>
+                                    <td>30%</td>
+                                    <td>Regular coursework and homework</td>
+                                </tr>
+                                <tr>
+                                    <td>Midterm Exam</td>
+                                    <td>25%</td>
+                                    <td>Mid-semester examination</td>
+                                </tr>
+                                <tr>
+                                    <td>Final Exam</td>
+                                    <td>35%</td>
+                                    <td>Comprehensive final examination</td>
+                                </tr>
+                                <tr>
+                                    <td>Participation</td>
+                                    <td>10%</td>
+                                    <td>Class participation and attendance</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-gavel me-2"></i>Course Policies</h3>
+                        
+                        <div class="accordion" id="policiesAccordion">
+                            <div class="accordion-item border-0 mb-2" style="border-radius: 10px; overflow: hidden;">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#attendancePolicy" style="background: var(--ug-light-blue); color: var(--ug-blue); font-weight: 600;">
+                                        <i class="fas fa-user-check me-2"></i>
+                                        Attendance Policy
+                                    </button>
+                                </h2>
+                                <div id="attendancePolicy" class="accordion-collapse collapse show" data-bs-parent="#policiesAccordion">
+                                    <div class="accordion-body">
+                                        Regular attendance is mandatory. Students are expected to attend all classes. More than 25% absence may result in course failure.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item border-0 mb-2" style="border-radius: 10px; overflow: hidden;">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#submissionPolicy" style="background: var(--ug-light-red); color: var(--ug-red); font-weight: 600;">
+                                        <i class="fas fa-clock me-2"></i>
+                                        Late Submission Policy
+                                    </button>
+                                </h2>
+                                <div id="submissionPolicy" class="accordion-collapse collapse" data-bs-parent="#policiesAccordion">
+                                    <div class="accordion-body">
+                                        Late assignments will be penalized 10% per day. No submissions will be accepted after one week past the due date.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="accordion-item border-0 mb-2" style="border-radius: 10px; overflow: hidden;">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#integrityPolicy" style="background: #fff3cd; color: var(--ug-red); font-weight: 600;">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        Academic Integrity
+                                    </button>
+                                </h2>
+                                <div id="integrityPolicy" class="accordion-collapse collapse" data-bs-parent="#policiesAccordion">
+                                    <div class="accordion-body">
+                                        All work submitted must be original. Plagiarism and cheating will result in course failure and disciplinary action.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <h3><i class="fas fa-info-circle me-2"></i>Quick Information</h3>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <div class="text-center p-3 rounded" style="background: var(--ug-light-blue); border: 2px solid var(--ug-blue);">
+                                    <h4 class="mb-1" style="color: var(--ug-blue);">{{ section.course.credits }}</h4>
+                                    <small class="text-muted">Credits</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="text-center p-3 rounded" style="background: var(--ug-light-red); border: 2px solid var(--ug-red);">
+                                    <h4 class="mb-1" style="color: var(--ug-red);">{{ section.max_capacity }}</h4>
+                                    <small class="text-muted">Capacity</small>
+                                </div>
+                            </div>
+                        </div>
+                        <p><strong>Duration:</strong> {{ section.semester.name }}</p>
+                        <p><strong>Enrolled:</strong> {{ enrollment_count|default:0 }} students</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3><i class="fas fa-folder me-2"></i>Course Materials</h3>
+                        {% if materials %}
+                            {% for material in materials %}
+                            <div class="d-flex align-items-center p-3 mb-2 rounded" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                                <div class="file-icon me-3">
+                                    <i class="fas fa-file-pdf" style="color: #dc3545;"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">{{ material.title }}</h6>
+                                    <small class="text-muted">{{ material.upload_date|date:"M d, Y" }}</small>
+                                </div>
+                                <a href="{{ material.file.url }}" class="btn-ug-secondary btn-sm" target="_blank">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">No materials available yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

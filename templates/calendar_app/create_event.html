@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event - CTA Calendar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --ug-red: #8B0000;
+            --ug-gold: #FFD700;
+            --ug-blue: #1e3a8a;
+            --ug-light-blue: #3b82f6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--ug-red), var(--ug-blue));
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-label {
+            color: var(--ug-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--ug-gold);
+            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ug-red), var(--ug-blue));
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--ug-blue);
+            border-color: var(--ug-blue);
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .priority-low { background: #d1ecf1; color: #0c5460; }
+        .priority-medium { background: #fff3cd; color: #856404; }
+        .priority-high { background: #f8d7da; color: #721c24; }
+        .priority-urgent { background: #dc3545; color: white; }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--ug-gold);
+            color: var(--ug-red);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--ug-gold);
+            color: var(--ug-red);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .back-btn {
+                position: static;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'calendar_app:calendar' %}" class="back-btn">
+        <i class="fas fa-arrow-left me-2"></i>Back to Calendar
+    </a>
+
+    <div class="container">
+        <div class="form-container">
+            <div class="form-header">
+                <h2 class="mb-0">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Event
+                </h2>
+                <p class="mb-0 mt-2 opacity-75">Add a new event to the academic calendar</p>
+            </div>
+
+            <!-- Display messages -->
+            {% if messages %}
+                <div class="mb-3">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label for="title" class="form-label">Event Title *</label>
+                        <input type="text" class="form-control" name="title" id="title" required 
+                               placeholder="Enter event title">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="event_type" class="form-label">Event Type *</label>
+                        <select class="form-select" name="event_type" id="event_type" required>
+                            <option value="">Select Type</option>
+                            {% for type_value, type_label in event_types %}
+                                <option value="{{ type_value }}">{{ type_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" name="description" id="description" rows="3" 
+                              placeholder="Enter event description (optional)"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="start_datetime" class="form-label">Start Date & Time *</label>
+                        <input type="datetime-local" class="form-control" name="start_datetime" id="start_datetime" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="end_datetime" class="form-label">End Date & Time *</label>
+                        <input type="datetime-local" class="form-control" name="end_datetime" id="end_datetime" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="priority" class="form-label">Priority</label>
+                        <select class="form-select" name="priority" id="priority">
+                            {% for priority_value, priority_label in priority_choices %}
+                                <option value="{{ priority_value }}" {% if priority_value == 'medium' %}selected{% endif %}>
+                                    {{ priority_label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        {% if sections %}
+                        <label for="section" class="form-label">Related Section</label>
+                        <select class="form-select" name="section" id="section">
+                            <option value="">No Section</option>
+                            {% for section in sections %}
+                                <option value="{{ section.id }}">{{ section.course.code }} - {{ section.section_number }}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 mb-3 d-flex align-items-center">
+                        <div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="all_day" id="all_day">
+                                <label class="form-check-label" for="all_day">
+                                    All Day Event
+                                </label>
+                            </div>
+                            {% if profile.role != 'student' %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="is_public" id="is_public">
+                                <label class="form-check-label" for="is_public">
+                                    Public Event
+                                </label>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Preview -->
+                <div class="card mb-3" id="eventPreview" style="display: none;">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-eye me-2"></i>Event Preview</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6 id="previewTitle">Event Title</h6>
+                                <p id="previewDescription" class="text-muted">Event description</p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <strong>Start:</strong> <span id="previewStart">-</span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <strong>End:</strong> <span id="previewEnd">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-light rounded p-2">
+                                    <div><strong>Type:</strong> <span id="previewType">-</span></div>
+                                    <div><strong>Priority:</strong> <span id="previewPriority" class="priority-badge">-</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'calendar_app:calendar' %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Create Event
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set default datetime values
+        const now = new Date();
+        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        
+        // Format datetime for input
+        const formatDateTime = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        };
+        
+        document.getElementById('start_datetime').value = formatDateTime(now);
+        tomorrow.setHours(now.getHours() + 1);
+        document.getElementById('end_datetime').value = formatDateTime(tomorrow);
+        
+        // All day checkbox handler
+        document.getElementById('all_day').addEventListener('change', function() {
+            const startInput = document.getElementById('start_datetime');
+            const endInput = document.getElementById('end_datetime');
+            
+            if (this.checked) {
+                // Set to start and end of day
+                const startDate = new Date(startInput.value);
+                startDate.setHours(0, 0, 0, 0);
+                startInput.value = formatDateTime(startDate);
+                
+                const endDate = new Date(endInput.value);
+                endDate.setHours(23, 59, 0, 0);
+                endInput.value = formatDateTime(endDate);
+                
+                startInput.disabled = true;
+                endInput.disabled = true;
+            } else {
+                startInput.disabled = false;
+                endInput.disabled = false;
+            }
+        });
+        
+        // Live preview
+        function updatePreview() {
+            const title = document.getElementById('title').value || 'Event Title';
+            const description = document.getElementById('description').value || 'No description';
+            const startDateTime = document.getElementById('start_datetime').value;
+            const endDateTime = document.getElementById('end_datetime').value;
+            const eventType = document.getElementById('event_type').value;
+            const priority = document.getElementById('priority').value;
+            const allDay = document.getElementById('all_day').checked;
+            
+            if (title.length > 3 || startDateTime) {
+                document.getElementById('eventPreview').style.display = 'block';
+                
+                document.getElementById('previewTitle').textContent = title;
+                document.getElementById('previewDescription').textContent = description;
+                
+                if (startDateTime) {
+                    const startDate = new Date(startDateTime);
+                    document.getElementById('previewStart').textContent = allDay ? 
+                        startDate.toLocaleDateString() : startDate.toLocaleString();
+                }
+                
+                if (endDateTime) {
+                    const endDate = new Date(endDateTime);
+                    document.getElementById('previewEnd').textContent = allDay ? 
+                        endDate.toLocaleDateString() : endDate.toLocaleString();
+                }
+                
+                const typeSelect = document.getElementById('event_type');
+                const typeText = typeSelect.options[typeSelect.selectedIndex]?.text || '-';
+                document.getElementById('previewType').textContent = typeText;
+                
+                const priorityBadge = document.getElementById('previewPriority');
+                priorityBadge.textContent = priority.charAt(0).toUpperCase() + priority.slice(1);
+                priorityBadge.className = `priority-badge priority-${priority}`;
+            } else {
+                document.getElementById('eventPreview').style.display = 'none';
+            }
+        }
+        
+        // Add event listeners for live preview
+        ['title', 'description', 'start_datetime', 'end_datetime', 'event_type', 'priority', 'all_day'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', updatePreview);
+                element.addEventListener('change', updatePreview);
+            }
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const startDateTime = new Date(document.getElementById('start_datetime').value);
+            const endDateTime = new Date(document.getElementById('end_datetime').value);
+            
+            if (endDateTime <= startDateTime) {
+                e.preventDefault();
+                alert('End date/time must be after start date/time');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>

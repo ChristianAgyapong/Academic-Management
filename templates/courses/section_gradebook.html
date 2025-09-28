@@ -1,0 +1,338 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Course Gradebook Card -->
+    <div class="content-card">
+        <div class="d-flex align-items-center justify-content-between card-title">
+            <span>
+                <i class="fas fa-chart-line me-2"></i>
+                Course Gradebook
+            </span>
+            <a href="#" class="link-btn">
+                <i class="fas fa-link"></i> Link
+            </a>
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-sm btn-outline-primary active">My Grades</button>
+                <button class="btn btn-sm btn-outline-secondary">Grade Summary</button>
+                <button class="btn btn-sm btn-outline-info">Print Report</button>
+            </div>
+
+            <div class="gradebook-container">
+                <h4 class="h5 mb-3">Grade Overview 
+                    <small class="text-muted">(Current Semester)</small>
+                </h4>
+                
+                <!-- Grade Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="content-card text-center">
+                            <div class="card-content">
+                                <div class="h2 text-primary mb-1">85.5</div>
+                                <small class="text-muted">Current Average</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="content-card text-center">
+                            <div class="card-content">
+                                <div class="h2 text-success mb-1">B+</div>
+                                <small class="text-muted">Letter Grade</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="content-card text-center">
+                            <div class="card-content">
+                                <div class="h2 text-warning mb-1">{{ grades.count }}</div>
+                                <small class="text-muted">Graded Items</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="content-card text-center">
+                            <div class="card-content">
+                                <div class="h2 text-info mb-1">{{ assignments.count|add:"-2" }}</div>
+                                <small class="text-muted">Pending</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Grades Table -->
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Assignment</th>
+                                <th>Category</th>
+                                <th>Score</th>
+                                <th>Max Points</th>
+                                <th>Percentage</th>
+                                <th>Date Graded</th>
+                                <th>Feedback</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if grades %}
+                                {% for grade in grades %}
+                                <tr>
+                                    <td>
+                                        <h6 class="mb-1">{{ grade.assignment.title }}</h6>
+                                        <small class="text-muted">{{ grade.assignment.section.course.code }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">Assignment</span>
+                                    </td>
+                                    <td class="fw-bold">{{ grade.score|default:"--" }}</td>
+                                    <td>{{ grade.assignment.max_points }}</td>
+                                    <td>
+                                        {% if grade.score %}
+                                            {% widthratio grade.score grade.assignment.max_points 100 %}%
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ grade.grade_date|date:"M d, Y"|default:"Not graded" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if grade.feedback %}
+                                            <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="{{ grade.feedback }}">
+                                                <i class="fas fa-comment"></i>
+                                            </button>
+                                        {% else %}
+                                            <span class="text-muted">--</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <!-- Sample data for demonstration -->
+                            <tr>
+                                <td>
+                                    <h6 class="mb-1">Midterm Examination</h6>
+                                    <small class="text-muted">{{ section.course.code }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-danger">Exam</span>
+                                </td>
+                                <td class="fw-bold text-success">89</td>
+                                <td>100</td>
+                                <td class="text-success">89%</td>
+                                <td>
+                                    <small class="text-muted">Nov 16, 2024</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Good understanding of concepts. Review chapter 5 for improvement.">
+                                        <i class="fas fa-comment"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <h6 class="mb-1">Assignment 2</h6>
+                                    <small class="text-muted">{{ section.course.code }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">Assignment</span>
+                                </td>
+                                <td class="fw-bold text-warning">75</td>
+                                <td>100</td>
+                                <td class="text-warning">75%</td>
+                                <td>
+                                    <small class="text-muted">Nov 10, 2024</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Late submission. Good work overall but needs more detail in explanations.">
+                                        <i class="fas fa-comment"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <h6 class="mb-1">Quiz 1</h6>
+                                    <small class="text-muted">{{ section.course.code }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning text-dark">Quiz</span>
+                                </td>
+                                <td class="fw-bold text-success">95</td>
+                                <td>100</td>
+                                <td class="text-success">95%</td>
+                                <td>
+                                    <small class="text-muted">Oct 28, 2024</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Excellent work! Keep it up.">
+                                        <i class="fas fa-comment"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <h6 class="mb-1">Assignment 1</h6>
+                                    <small class="text-muted">{{ section.course.code }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">Assignment</span>
+                                </td>
+                                <td class="fw-bold text-success">88</td>
+                                <td>100</td>
+                                <td class="text-success">88%</td>
+                                <td>
+                                    <small class="text-muted">Oct 15, 2024</small>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Well organized and thorough. Minor formatting issues.">
+                                        <i class="fas fa-comment"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Pending assignments -->
+                            {% for assignment in assignments %}
+                                {% if not assignment in grades %}
+                                <tr class="table-light">
+                                    <td>
+                                        <h6 class="mb-1">{{ assignment.title }}</h6>
+                                        <small class="text-muted">{{ section.course.code }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">Assignment</span>
+                                    </td>
+                                    <td class="text-muted">--</td>
+                                    <td>{{ assignment.max_points }}</td>
+                                    <td class="text-muted">--</td>
+                                    <td>
+                                        <small class="text-muted">Pending</small>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">Not submitted</small>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Grade Distribution Chart -->
+                <div class="content-card mt-4">
+                    <div class="card-title">
+                        Grade Distribution
+                    </div>
+                    <div class="card-content">
+                        <canvas id="gradeChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grade Analysis -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-analytics me-2"></i>
+            Performance Analysis
+        </div>
+        
+        <div class="card-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Strengths</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Consistent quiz performance
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Strong exam results
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Good understanding of core concepts
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Areas for Improvement</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                            Assignment submission timing
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-exclamation-circle text-warning me-2"></i>
+                            Detail in written explanations
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-exclamation-circle text-info me-2"></i>
+                            Participation in class discussions
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+    
+    // Grade distribution chart
+    const ctx = document.getElementById('gradeChart').getContext('2d');
+    const gradeChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Assignment 1', 'Quiz 1', 'Assignment 2', 'Midterm'],
+            datasets: [{
+                label: 'Your Scores (%)',
+                data: [88, 95, 75, 89],
+                borderColor: '#0066cc',
+                backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Class Average (%)',
+                data: [82, 87, 78, 84],
+                borderColor: '#ff6b35',
+                backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Grade Trend Analysis'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

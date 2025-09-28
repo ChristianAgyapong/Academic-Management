@@ -1,0 +1,220 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Resources Section -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-folder me-2"></i>
+            Resources
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-sm btn-ug-primary">View</button>
+            </div>
+
+            <div class="info-card">
+                <h4 class="h5 mb-3">Resources 
+                    <small class="text-muted">({{ materials.count }} files)</small>
+                </h4>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="sortSelect" class="form-label mb-0 fw-bold">Sort by:</label>
+                        <select id="sortSelect" class="form-select form-select-sm" style="width: auto;">
+                            <option>Date Added</option>
+                            <option>Name</option>
+                            <option>File Type</option>
+                            <option>File Size</option>
+                        </select>
+                    </div>
+                    
+                    <div class="btn-group" role="group">
+                        <input type="radio" class="btn-check" name="viewType" id="listView" checked>
+                        <label class="btn btn-outline-secondary btn-sm" for="listView">
+                            <i class="fas fa-list"></i>
+                        </label>
+                        <input type="radio" class="btn-check" name="viewType" id="gridView">
+                        <label class="btn btn-outline-secondary btn-sm" for="gridView">
+                            <i class="fas fa-th-large"></i>
+                        </label>
+                    </div>
+                </div>
+
+                {% if materials %}
+                    <!-- List View -->
+                    <div id="listViewContent">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Date Added</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for material in materials %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-3">
+                                                    {% if material.file.name|lower|slice:"-4:" == ".pdf" %}
+                                                        <i class="fas fa-file-pdf fa-lg text-danger"></i>
+                                                    {% elif material.file.name|lower|slice:"-5:" == ".docx" or material.file.name|lower|slice:"-4:" == ".doc" %}
+                                                        <i class="fas fa-file-word fa-lg text-primary"></i>
+                                                    {% elif material.file.name|lower|slice:"-5:" == ".pptx" or material.file.name|lower|slice:"-4:" == ".ppt" %}
+                                                        <i class="fas fa-file-powerpoint fa-lg text-warning"></i>
+                                                    {% elif material.file.name|lower|slice:"-5:" == ".xlsx" or material.file.name|lower|slice:"-4:" == ".xls" %}
+                                                        <i class="fas fa-file-excel fa-lg text-success"></i>
+                                                    {% elif material.file.name|lower|slice:"-4:" == ".mp4" or material.file.name|lower|slice:"-4:" == ".avi" or material.file.name|lower|slice:"-4:" == ".mov" %}
+                                                        <i class="fas fa-video fa-lg text-info"></i>
+                                                    {% elif material.file.name|lower|slice:"-4:" == ".jpg" or material.file.name|lower|slice:"-4:" == ".png" or material.file.name|lower|slice:"-4:" == ".gif" %}
+                                                        <i class="fas fa-image fa-lg text-secondary"></i>
+                                                    {% else %}
+                                                        <i class="fas fa-file fa-lg text-secondary"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1">{{ material.title }}</h6>
+                                                    <small class="text-muted">{{ material.description|default:"No description"|truncatechars:50 }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">
+                                                {{ material.file.name|slice:"-4:"|upper }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ material.file.size|filesizeformat|default:"Unknown" }}</small>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ material.upload_date|date:"M d, Y" }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a href="{{ material.file.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                                <a href="{{ material.file.url }}" class="btn btn-sm btn-outline-secondary" download>
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Grid View -->
+                    <div id="gridViewContent" style="display: none;">
+                        <div class="row">
+                            {% for material in materials %}
+                            <div class="col-md-6 col-lg-4 mb-3">
+                                <div class="content-card h-100">
+                                    <div class="card-content">
+                                        <div class="text-center mb-3">
+                                            {% if material.file.name|lower|slice:"-4:" == ".pdf" %}
+                                                <i class="fas fa-file-pdf fa-3x text-danger mb-2"></i>
+                                            {% elif material.file.name|lower|slice:"-5:" == ".docx" or material.file.name|lower|slice:"-4:" == ".doc" %}
+                                                <i class="fas fa-file-word fa-3x text-primary mb-2"></i>
+                                            {% elif material.file.name|lower|slice:"-5:" == ".pptx" or material.file.name|lower|slice:"-4:" == ".ppt" %}
+                                                <i class="fas fa-file-powerpoint fa-3x text-warning mb-2"></i>
+                                            {% elif material.file.name|lower|slice:"-4:" == ".mp4" or material.file.name|lower|slice:"-4:" == ".avi" %}
+                                                <i class="fas fa-video fa-3x text-info mb-2"></i>
+                                            {% else %}
+                                                <i class="fas fa-file fa-3x text-secondary mb-2"></i>
+                                            {% endif %}
+                                        </div>
+                                        <h6 class="text-center mb-2">{{ material.title }}</h6>
+                                        <p class="text-muted small text-center mb-3">{{ material.description|default:"No description"|truncatechars:60 }}</p>
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">{{ material.upload_date|date:"M d" }}</small>
+                                            <div>
+                                                <a href="{{ material.file.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ material.file.url }}" class="btn btn-sm btn-outline-secondary ms-1" download>
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h5>No Resources Available</h5>
+                        <p class="text-muted">Course resources will be uploaded by your instructor soon.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Resource Statistics Card -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-chart-bar me-2"></i>
+            Resource Statistics
+        </div>
+        
+        <div class="card-content">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-primary mb-1">{{ materials.count }}</div>
+                        <small class="text-muted">Total Files</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-success mb-1">0</div>
+                        <small class="text-muted">Downloaded</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-warning mb-1">0</div>
+                        <small class="text-muted">Bookmarked</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-info mb-1">0 MB</div>
+                        <small class="text-muted">Total Size</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Toggle between list and grid view
+    document.getElementById('listView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('listViewContent').style.display = 'block';
+            document.getElementById('gridViewContent').style.display = 'none';
+        }
+    });
+    
+    document.getElementById('gridView').addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('listViewContent').style.display = 'none';
+            document.getElementById('gridViewContent').style.display = 'block';
+        }
+    });
+</script>
+{% endblock %}

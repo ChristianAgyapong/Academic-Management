@@ -1,0 +1,489 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Class Management - {{ section.course.code }}{% endblock %}
+
+{% block content %}
+<style>
+/* Faculty-specific section management styling */
+.faculty-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.faculty-header::before {
+    content: '📊';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 3rem;
+    opacity: 0.2;
+}
+
+.faculty-card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 12px;
+    border-left: 5px solid #e74c3c;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.faculty-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.management-btn {
+    background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin: 0.25rem;
+}
+
+.management-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.faculty-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(45deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.faculty-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #e74c3c;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.student-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.student-card {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.student-card:hover {
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.action-toolbar {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.toolbar-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.performance-indicator {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.performance-excellent { background: #d4edda; color: #155724; }
+.performance-good { background: #d1ecf1; color: #0c5460; }
+.performance-average { background: #fff3cd; color: #856404; }
+.performance-poor { background: #f8d7da; color: #721c24; }
+
+.grade-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+</style>
+
+<!-- Faculty Section Management Header -->
+<div class="faculty-header">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1><i class="fas fa-chalkboard-teacher"></i> Class Management Center</h1>
+            <h3 class="mb-2">{{ section.course.code }} - {{ section.course.name }}</h3>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-light text-dark px-3 py-2">Section {{ section.section_number }}</span>
+                <span class="badge bg-light text-dark px-3 py-2">{{ section.semester }} {{ section.academic_year }}</span>
+                <span class="badge bg-light text-dark px-3 py-2">{{ enrollments.count }} Students</span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="d-flex flex-column align-items-end">
+                <h5 class="mb-1">{{ request.user.get_full_name }}</h5>
+                <small>Course Instructor</small>
+                <small><i class="fas fa-calendar"></i> {{ section.schedule|default:"Schedule TBA" }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Toolbar -->
+<div class="action-toolbar">
+    <strong><i class="fas fa-tools"></i> Quick Actions:</strong>
+    <a href="{% url 'attendance:mark_attendance' section.id %}" class="toolbar-btn">
+        <i class="fas fa-user-check"></i> Mark Attendance
+    </a>
+    <a href="{% url 'courses:create_assignment' section.id %}" class="toolbar-btn">
+        <i class="fas fa-plus"></i> New Assignment
+    </a>
+    <a href="{% url 'grades:grade_students' section.id %}" class="toolbar-btn">
+        <i class="fas fa-edit"></i> Grade Book
+    </a>
+    <a href="{% url 'courses:section_announcements' section.id %}" class="toolbar-btn">
+        <i class="fas fa-envelope"></i> Send Announcement
+    </a>
+    <a href="{% url 'courses:upload_material' section.id %}" class="toolbar-btn">
+        <i class="fas fa-upload"></i> Upload Materials
+    </a>
+    <a href="{% url 'courses:teacher_analytics' section.id %}" class="toolbar-btn">
+        <i class="fas fa-chart-bar"></i> Analytics
+    </a>
+    <a href="{% url 'courses:teacher_section_settings' section.id %}" class="toolbar-btn">
+        <i class="fas fa-cog"></i> Settings
+    </a>
+</div>
+
+<!-- Faculty Performance Overview -->
+<div class="faculty-stats-grid">
+    <div class="stat-card">
+        <h3>{{ enrollments.count }}</h3>
+        <p><i class="fas fa-users"></i> Enrolled Students</p>
+        <small>Capacity: {{ section.max_capacity|default:30 }}</small>
+    </div>
+    <div class="stat-card">
+        <h3>85%</h3>
+        <p><i class="fas fa-chart-line"></i> Class Average</p>
+        <small>Above Department Avg</small>
+    </div>
+    <div class="stat-card">
+        <h3>92%</h3>
+        <p><i class="fas fa-calendar-check"></i> Attendance Rate</p>
+        <small>Excellent Participation</small>
+    </div>
+    <div class="stat-card">
+        <h3>15</h3>
+        <p><i class="fas fa-tasks"></i> Assignments</p>
+        <small>5 Pending Grades</small>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Student Roster Management -->
+    <div class="col-md-8">
+        <div class="faculty-section">
+            <h4><i class="fas fa-users-cog"></i> Student Roster Management</h4>
+            <p class="text-muted mb-3">Monitor and manage your students' academic progress</p>
+            
+            <div class="student-grid">
+                {% for enrollment in enrollments %}
+                <div class="student-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="mb-0">{{ enrollment.student.profile.user.get_full_name }}</h6>
+                            <small class="text-muted">ID: {{ enrollment.student.student_id }}</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="performance-indicator performance-good">B+</span>
+                        </div>
+                    </div>
+                    
+                    <div class="row text-center mb-2">
+                        <div class="col-4">
+                            <small class="text-muted d-block">Current Grade</small>
+                            <strong class="text-success">87%</strong>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted d-block">Attendance</small>
+                            <strong class="text-info">94%</strong>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted d-block">Assignments</small>
+                            <strong class="text-warning">12/15</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-outline-primary btn-sm flex-fill">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button class="btn btn-outline-success btn-sm flex-fill">
+                            <i class="fas fa-edit"></i> Grade
+                        </button>
+                        <button class="btn btn-outline-info btn-sm flex-fill">
+                            <i class="fas fa-envelope"></i> Contact
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-plus fa-3x text-muted mb-3"></i>
+                        <h6 class="text-muted">No Students Enrolled</h6>
+                        <p class="text-muted">Students will appear here once they enroll in your section.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Class Management Panel -->
+    <div class="col-md-4">
+        <!-- Course Information -->
+        <div class="faculty-card">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-danger"><i class="fas fa-info-circle"></i> Course Information</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <td><strong>Course:</strong></td>
+                        <td>{{ section.course.name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code:</strong></td>
+                        <td>{{ section.course.code }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Credits:</strong></td>
+                        <td>{{ section.course.credits }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Department:</strong></td>
+                        <td>{{ section.course.department.name|default:"Computer Science" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Room:</strong></td>
+                        <td>{{ section.room|default:"TBA" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time:</strong></td>
+                        <td>{{ section.schedule|default:"TBA" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quick Grade Entry -->
+        <div class="faculty-card">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-danger"><i class="fas fa-edit"></i> Quick Grade Entry</h6>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Assignment Type</label>
+                        <select class="form-select form-select-sm">
+                            <option>Quiz</option>
+                            <option>Assignment</option>
+                            <option>Exam</option>
+                            <option>Project</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Grade All Students</label>
+                        <input type="number" class="form-control form-control-sm" placeholder="Enter grade">
+                    </div>
+                    <button type="button" class="management-btn w-100">
+                        <i class="fas fa-save"></i> Save Grades
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Class Performance Analytics -->
+        <div class="faculty-card">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-danger"><i class="fas fa-chart-pie"></i> Performance Analytics</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>A Grades</span>
+                        <strong class="text-success">25%</strong>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-success" style="width: 25%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>B Grades</span>
+                        <strong class="text-info">45%</strong>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-info" style="width: 45%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>C Grades</span>
+                        <strong class="text-warning">20%</strong>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-warning" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>Below C</span>
+                        <strong class="text-danger">10%</strong>
+                    </div>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-danger" style="width: 10%;"></div>
+                    </div>
+                </div>
+                <small class="text-muted">Class performance distribution</small>
+            </div>
+        </div>
+
+        <!-- Upcoming Deadlines -->
+        <div class="faculty-card">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-danger"><i class="fas fa-clock"></i> Upcoming Deadlines</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-2 p-2 rounded" style="background-color: #f8f9fa;">
+                    <div class="bg-danger text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 30px; height: 30px;">
+                        <i class="fas fa-exclamation fa-sm"></i>
+                    </div>
+                    <div>
+                        <strong class="d-block">Grade Assignment 3</strong>
+                        <small class="text-muted">Due Tomorrow</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 rounded" style="background-color: #f8f9fa;">
+                    <div class="bg-warning text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 30px; height: 30px;">
+                        <i class="fas fa-tasks fa-sm"></i>
+                    </div>
+                    <div>
+                        <strong class="d-block">Midterm Grades</strong>
+                        <small class="text-muted">Due Friday</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 rounded" style="background-color: #f8f9fa;">
+                    <div class="bg-info text-white rounded d-flex align-items-center justify-content-center me-3" style="width: 30px; height: 30px;">
+                        <i class="fas fa-calendar fa-sm"></i>
+                    </div>
+                    <div>
+                        <strong class="d-block">Faculty Meeting</strong>
+                        <small class="text-muted">Next Tuesday</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Management Tools -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="faculty-section">
+            <h4><i class="fas fa-tools"></i> Advanced Class Management</h4>
+            <p class="text-muted mb-4">Professional tools for comprehensive class administration</p>
+            
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-bar fa-2x text-danger mb-3"></i>
+                            <h6>Grade Analytics</h6>
+                            <p class="text-muted small">Comprehensive grade analysis and trends</p>
+                            <a href="#" class="management-btn">View Analytics</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-export fa-2x text-danger mb-3"></i>
+                            <h6>Export Data</h6>
+                            <p class="text-muted small">Export grades, attendance, and reports</p>
+                            <a href="#" class="management-btn">Export</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-comments fa-2x text-danger mb-3"></i>
+                            <h6>Class Discussion</h6>
+                            <p class="text-muted small">Moderate and manage class discussions</p>
+                            <a href="#" class="management-btn">Manage</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-cogs fa-2x text-danger mb-3"></i>
+                            <h6>Class Settings</h6>
+                            <p class="text-muted small">Configure class policies and settings</p>
+                            <a href="#" class="management-btn">Configure</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

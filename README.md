@@ -25,6 +25,31 @@ A comprehensive web-based academic management system built with Django, designed
 - **Academic Tracking**: Check attendance records and view grades
 - **Transcript Download**: Download academic transcripts
 
+## 🎨 User Interface
+
+The system features a clean, professional interface inspired by the Chrix Tech Academic portal:
+
+- **Clean Layout**: Simple, uncluttered design with professional appearance
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices  
+- **Intuitive Navigation**: Clear sidebar menu with easy access to all features
+- **Consistent Styling**: Uniform appearance across all sections and pages
+- **Accessibility**: Easy-to-read fonts, proper contrast, and keyboard navigation support
+
+### Course Management Interface
+- **Overview**: Course information, statistics, and recent activity
+- **Announcements**: Clean table view of course announcements
+- **Resources**: File management and resource sharing
+- **Assignments**: Assignment creation and submission tracking
+- **Gradebook**: Grade management and analytics
+- **Discussions**: Forum-style discussions and Q&A
+- **Tests & Quizzes**: Online assessment tools
+- **Drop Box**: File submission and sharing
+- **Chat Room**: Real-time communication
+- **Email Archive**: Message history and communication
+- **Roster**: Student management and class lists
+- **Calendar**: Schedule and event management
+- **Help**: System documentation and support
+
 ## 🛠️ Technology Stack
 
 - **Backend**: Django 4.2+ (Python)

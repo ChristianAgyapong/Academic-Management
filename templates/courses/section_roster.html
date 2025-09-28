@@ -1,0 +1,98 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+<!-- Roster Search -->
+<div class="content-card">
+    <div class="card-header">
+        Search Roster
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control form-control-sm" placeholder="Search by name or email...">
+            </div>
+            <div class="col-md-3">
+                <select class="form-control form-control-sm">
+                    <option>All Roles</option>
+                    <option>Students</option>
+                    <option>Teaching Assistants</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary btn-sm">Search</button>
+                <button class="btn btn-secondary btn-sm ml-2">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Roster Table -->
+<div class="content-card">
+    <div class="card-header">
+        Class Roster ({{ total_students|default:25 }} students)
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Student ID</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Adams, John</td>
+                    <td>STU001</td>
+                    <td>john.adams@ug.edu.gh</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>2024-01-15</td>
+                </tr>
+                <tr>
+                    <td>Brown, Sarah</td>
+                    <td>STU002</td>
+                    <td>sarah.brown@ug.edu.gh</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>2024-01-14</td>
+                </tr>
+                <tr>
+                    <td>Davis, Michael</td>
+                    <td>STU003</td>
+                    <td>michael.davis@ug.edu.gh</td>
+                    <td><span class="badge badge-warning">Inactive</span></td>
+                    <td>2024-01-10</td>
+                </tr>
+                <tr>
+                    <td>Johnson, Emily</td>
+                    <td>STU004</td>
+                    <td>emily.johnson@ug.edu.gh</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>2024-01-15</td>
+                </tr>
+                <tr>
+                    <td>Miller, Robert</td>
+                    <td>STU005</td>
+                    <td>robert.miller@ug.edu.gh</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>2024-01-15</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Export Options -->
+<div class="content-card">
+    <div class="card-header">
+        Export Roster
+    </div>
+    <div class="card-body">
+        <p class="mb-2">Export class roster in various formats:</p>
+        <button class="btn btn-outline-primary btn-sm mr-2">Export as CSV</button>
+        <button class="btn btn-outline-primary btn-sm mr-2">Export as PDF</button>
+        <button class="btn btn-outline-primary btn-sm">Print Roster</button>
+    </div>
+</div>
+{% endblock %}

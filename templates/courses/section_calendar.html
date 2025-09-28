@@ -1,0 +1,186 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Calendar Section -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-calendar me-2"></i>
+            Calendar
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-sm btn-ug-primary">View Events</button>
+                <button class="btn btn-sm btn-ug-secondary">Publish (private)</button>
+                <a href="{% url 'calendar_app:calendar' %}" class="btn btn-sm btn-outline-info ms-auto">
+                    <i class="fas fa-external-link-alt"></i> Full Calendar
+                </a>
+            </div>
+
+            <div class="calendar-container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- Calendar Grid -->
+                        <div class="bg-light rounded p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">{{ section.semester.name }} - Course Schedule</h5>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="previousMonth()">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span class="mx-2" id="currentMonth">Current Month</span>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="nextMonth()">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Simple calendar display -->
+                            <div class="calendar-grid">
+                                <div class="row text-center border-bottom pb-2 mb-2">
+                                    <div class="col"><strong>Sun</strong></div>
+                                    <div class="col"><strong>Mon</strong></div>
+                                    <div class="col"><strong>Tue</strong></div>
+                                    <div class="col"><strong>Wed</strong></div>
+                                    <div class="col"><strong>Thu</strong></div>
+                                    <div class="col"><strong>Fri</strong></div>
+                                    <div class="col"><strong>Sat</strong></div>
+                                </div>
+                                <div id="calendarDays">
+                                    <!-- Calendar days will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Upcoming Events -->
+                        <div class="content-card">
+                            <div class="card-title">
+                                Upcoming Events
+                            </div>
+                            <div class="card-content">
+                                {% if assignments %}
+                                    {% for assignment in assignments|slice:":5" %}
+                                    <div class="list-item">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="mb-1">{{ assignment.title }}</h6>
+                                                <small class="text-muted">Assignment Due</small>
+                                            </div>
+                                            <span class="badge bg-warning text-dark">
+                                                {{ assignment.due_date|date:"M d" }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                <!-- Sample course events -->
+                                <div class="list-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="mb-1">Midterm Exam</h6>
+                                            <small class="text-muted">Examination</small>
+                                        </div>
+                                        <span class="badge bg-danger">
+                                            Nov 15
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="list-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="mb-1">Class Review Session</h6>
+                                            <small class="text-muted">Study Session</small>
+                                        </div>
+                                        <span class="badge bg-info">
+                                            Nov 12
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Schedule -->
+                        <div class="content-card mt-3">
+                            <div class="card-title">
+                                Class Schedule
+                            </div>
+                            <div class="card-content">
+                                <p><strong>Time:</strong> {{ section.schedule|default:"Schedule TBA" }}</p>
+                                <p><strong>Location:</strong> {{ section.classroom|default:"Location TBA" }}</p>
+                                <p><strong>Semester:</strong> {{ section.semester.name }}</p>
+                                <p><strong>Duration:</strong> 
+                                    {{ section.semester.start_date|date:"M d" }} - {{ section.semester.end_date|date:"M d, Y" }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Simple calendar functionality
+    let currentDate = new Date();
+    
+    function updateCalendar() {
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        
+        document.getElementById('currentMonth').textContent = 
+            monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+        
+        // Simple calendar grid generation
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const daysInMonth = lastDay.getDate();
+        const startingDayOfWeek = firstDay.getDay();
+        
+        let calendarHTML = '';
+        let dayCount = 1;
+        
+        for (let week = 0; week < 6; week++) {
+            calendarHTML += '<div class="row text-center mb-1">';
+            for (let day = 0; day < 7; day++) {
+                if (week === 0 && day < startingDayOfWeek) {
+                    calendarHTML += '<div class="col py-2"></div>';
+                } else if (dayCount > daysInMonth) {
+                    calendarHTML += '<div class="col py-2"></div>';
+                } else {
+                    const isToday = dayCount === new Date().getDate() && 
+                                  currentDate.getMonth() === new Date().getMonth() && 
+                                  currentDate.getFullYear() === new Date().getFullYear();
+                    const classes = isToday ? 'col py-2 bg-primary text-white rounded' : 'col py-2';
+                    calendarHTML += `<div class="${classes}">${dayCount}</div>`;
+                    dayCount++;
+                }
+            }
+            calendarHTML += '</div>';
+            
+            if (dayCount > daysInMonth) break;
+        }
+        
+        document.getElementById('calendarDays').innerHTML = calendarHTML;
+    }
+    
+    function previousMonth() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        updateCalendar();
+    }
+    
+    function nextMonth() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        updateCalendar();
+    }
+    
+    // Initialize calendar on page load
+    document.addEventListener('DOMContentLoaded', updateCalendar);
+</script>
+{% endblock %}

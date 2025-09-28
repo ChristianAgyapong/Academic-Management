@@ -1,13 +1,98 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin Dashboard - SAMS{% endblock %}
+{% block title %}System Administration - CTA{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
-        <p class="text-muted">Welcome back, {{ user.get_full_name|default:user.username }}!</p>
-        <hr>
+<style>
+/* Admin-specific styling */
+.admin-theme {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+}
+.admin-card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 12px;
+    border-left: 5px solid #ffd700;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+.admin-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+.admin-welcome {
+    background: linear-gradient(135deg, #1a1a2e 0%, #ffd700 100%);
+    color: white;
+    padding: 3rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.admin-welcome::before {
+    content: '⚡';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 4rem;
+    opacity: 0.2;
+}
+.admin-stats {
+    background: linear-gradient(45deg, #ffd700 0%, #ff8c00 100%);
+}
+.admin-btn {
+    background: linear-gradient(135deg, #1a1a2e 0%, #ffd700 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 15px 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.admin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    color: white;
+}
+.system-badge {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+</style>
+
+<!-- Admin Control Center Header -->
+<div class="admin-welcome">
+    <div class="row align-items-center">
+        <div class="col-md-2">
+            <div class="admin-avatar">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center border border-3" style="width: 100px; height: 100px;">
+                    <i class="fas fa-user-shield fa-3x text-dark"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h1><i class="fas fa-cogs"></i> System Administration Center</h1>
+            <h3 class="mb-1">Administrator: {{ user.get_full_name|default:user.username }}</h3>
+            <div class="d-flex align-items-center mb-2">
+                <span class="system-badge me-3">System Admin</span>
+                <span class="system-badge">Full Access</span>
+            </div>
+            <p class="mb-0"><i class="fas fa-shield-alt"></i> Complete System Control | Academic Year 2024-2025</p>
+        </div>
+        <div class="col-md-2">
+            <div class="text-center">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px;">
+                    <div class="text-center">
+                        <h4 class="mb-0 text-dark">{{ total_students|add:total_teachers }}</h4>
+                        <small class="text-muted">Total Users</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -1,0 +1,423 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Email Archive Card -->
+    <div class="content-card">
+        <div class="d-flex align-items-center justify-content-between card-title">
+            <span>
+                <i class="fas fa-envelope me-2"></i>
+                Course Email Archive
+            </span>
+            <a href="#" class="link-btn">
+                <i class="fas fa-link"></i> Link
+            </a>
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-sm btn-outline-primary active">All Emails</button>
+                <button class="btn btn-sm btn-outline-info">Sent</button>
+                <button class="btn btn-sm btn-outline-success">Received</button>
+                <button class="btn btn-sm btn-outline-warning">Important</button>
+                <button class="btn btn-sm btn-primary ms-auto">
+                    <i class="fas fa-plus"></i> Compose
+                </button>
+            </div>
+
+            <div class="email-archive-container">
+                <h4 class="h5 mb-3">Email Archive 
+                    <small class="text-muted">(showing last 30 days)</small>
+                </h4>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="emailFilter" class="form-label mb-0 fw-bold">Filter:</label>
+                        <select id="emailFilter" class="form-select form-select-sm" style="width: auto;">
+                            <option>All Communications</option>
+                            <option>From Instructor</option>
+                            <option>Class Announcements</option>
+                            <option>Assignment Related</option>
+                            <option>Grade Notifications</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="search" class="form-control form-control-sm" placeholder="Search emails..." style="width: 200px;">
+                        <button class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Email List -->
+                <div class="email-list">
+                    <!-- Email Item 1 -->
+                    <div class="list-item email-item" onclick="toggleEmailContent('email1')">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="user-avatar bg-primary">
+                                    {{ section.teacher.profile.user.username|slice:":2"|upper }}
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-danger me-2">Important</span>
+                                            Midterm Exam Information and Study Guide
+                                        </h6>
+                                        <small class="text-muted">
+                                            From: {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}
+                                            &lt;{{ section.teacher.profile.user.email|default:"instructor@ug.edu.gh" }}&gt;
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Nov 18, 2024 2:15 PM</small>
+                                        <div class="mt-1">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 email-preview">
+                                    Dear students, please find attached the study guide for the upcoming midterm examination...
+                                </p>
+                                
+                                <!-- Email Content (Initially Hidden) -->
+                                <div id="email1" class="email-content mt-3" style="display: none;">
+                                    <div class="bg-light p-3 border rounded">
+                                        <p><strong>Subject:</strong> Midterm Exam Information and Study Guide</p>
+                                        <p><strong>Date:</strong> November 18, 2024 2:15 PM</p>
+                                        <p><strong>To:</strong> {{ section.course.code }} Students</p>
+                                        <hr>
+                                        <p>Dear students,</p>
+                                        <p>I hope you are all doing well. As we approach the midterm examination scheduled for November 15, 2024, I wanted to provide you with important information and resources to help you prepare effectively.</p>
+                                        
+                                        <p><strong>Exam Details:</strong></p>
+                                        <ul>
+                                            <li>Date: November 15, 2024</li>
+                                            <li>Time: 2:00 PM - 4:00 PM</li>
+                                            <li>Location: Lecture Hall 204</li>
+                                            <li>Duration: 2 hours</li>
+                                            <li>Total Points: 200</li>
+                                        </ul>
+                                        
+                                        <p><strong>Topics Covered:</strong></p>
+                                        <ul>
+                                            <li>Chapters 1-6 of the textbook</li>
+                                            <li>All lecture materials and presentations</li>
+                                            <li>Laboratory exercises 1-4</li>
+                                            <li>Homework assignments 1-3</li>
+                                        </ul>
+                                        
+                                        <p>The study guide document is attached to this email. Please review it thoroughly and don't hesitate to reach out if you have any questions.</p>
+                                        
+                                        <p>Best of luck with your studies!</p>
+                                        
+                                        <p>Best regards,<br>
+                                        {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}<br>
+                                        {{ section.course.department }}</p>
+                                        
+                                        <div class="mt-3">
+                                            <strong>Attachments:</strong>
+                                            <div class="mt-2">
+                                                <a href="#" class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-file-pdf"></i> Midterm_Study_Guide.pdf
+                                                </a>
+                                                <a href="#" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 2 -->
+                    <div class="list-item email-item" onclick="toggleEmailContent('email2')">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="user-avatar bg-info">
+                                    SY
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-success me-2">System</span>
+                                            Assignment 2 Grade Posted
+                                        </h6>
+                                        <small class="text-muted">
+                                            From: Academic System &lt;system@ug.edu.gh&gt;
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Nov 16, 2024 10:30 AM</small>
+                                        <div class="mt-1">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 email-preview">
+                                    Your grade for Assignment 2 has been posted. Grade: 75/100. View details in the gradebook...
+                                </p>
+                                
+                                <!-- Email Content -->
+                                <div id="email2" class="email-content mt-3" style="display: none;">
+                                    <div class="bg-light p-3 border rounded">
+                                        <p><strong>Subject:</strong> Assignment 2 Grade Posted</p>
+                                        <p><strong>Date:</strong> November 16, 2024 10:30 AM</p>
+                                        <p><strong>To:</strong> {{ request.user.email|default:"student@ug.edu.gh" }}</p>
+                                        <hr>
+                                        <p>Dear {{ request.user.get_full_name|default:request.user.username }},</p>
+                                        <p>Your grade for <strong>Assignment 2: Memory Systems</strong> in course <strong>{{ section.course.code }}</strong> has been posted.</p>
+                                        
+                                        <div class="alert alert-info">
+                                            <h6>Grade Summary:</h6>
+                                            <ul class="mb-0">
+                                                <li><strong>Assignment:</strong> Assignment 2: Memory Systems</li>
+                                                <li><strong>Score:</strong> 75/100 (75%)</li>
+                                                <li><strong>Letter Grade:</strong> C+</li>
+                                                <li><strong>Class Average:</strong> 78/100</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <p><strong>Instructor Feedback:</strong></p>
+                                        <p class="fst-italic">"Good effort on this assignment. Your understanding of cache concepts is solid, but there were some calculation errors in problems 3 and 5. Also, the submission was late which resulted in a 10% penalty. Please review the feedback and see me during office hours if you have questions."</p>
+                                        
+                                        <p>You can view detailed feedback and rubric scores in the course gradebook.</p>
+                                        
+                                        <div class="mt-3">
+                                            <a href="{% url 'courses:section_gradebook' section.id %}" class="btn btn-primary">
+                                                <i class="fas fa-chart-line"></i> View Gradebook
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 3 -->
+                    <div class="list-item email-item" onclick="toggleEmailContent('email3')">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="user-avatar bg-warning">
+                                    {{ request.user.username|slice:":2"|upper }}
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-info me-2">Sent</span>
+                                            Question about Assignment 3 Requirements
+                                        </h6>
+                                        <small class="text-muted">
+                                            To: {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}
+                                            &lt;{{ section.teacher.profile.user.email|default:"instructor@ug.edu.gh" }}&gt;
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Nov 14, 2024 4:20 PM</small>
+                                        <div class="mt-1">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 email-preview">
+                                    Dear Professor, I have a question regarding the requirements for Assignment 3...
+                                </p>
+                                
+                                <!-- Email Content -->
+                                <div id="email3" class="email-content mt-3" style="display: none;">
+                                    <div class="bg-light p-3 border rounded">
+                                        <p><strong>Subject:</strong> Question about Assignment 3 Requirements</p>
+                                        <p><strong>Date:</strong> November 14, 2024 4:20 PM</p>
+                                        <p><strong>From:</strong> {{ request.user.get_full_name|default:request.user.username }} &lt;{{ request.user.email|default:"student@ug.edu.gh" }}&gt;</p>
+                                        <p><strong>To:</strong> {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</p>
+                                        <hr>
+                                        <p>Dear Professor {{ section.teacher.profile.user.last_name|default:section.teacher.profile.user.username }},</p>
+                                        
+                                        <p>I hope you are doing well. I have a question regarding Assignment 3: Processor Design that is due next week.</p>
+                                        
+                                        <p>In the assignment instructions, it mentions that we need to "implement a simplified MIPS processor simulation." I wanted to clarify whether we should:</p>
+                                        
+                                        <ol>
+                                            <li>Write the simulation from scratch, or</li>
+                                            <li>Use the provided framework code as a starting point?</li>
+                                        </ol>
+                                        
+                                        <p>Also, should the simulation support all MIPS instructions or just the subset mentioned in the textbook (ADD, SUB, LW, SW, BEQ)?</p>
+                                        
+                                        <p>I appreciate your time and look forward to your guidance.</p>
+                                        
+                                        <p>Best regards,<br>
+                                        {{ request.user.get_full_name|default:request.user.username }}<br>
+                                        Student ID: {{ request.user.username|upper }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Item 4 -->
+                    <div class="list-item email-item" onclick="toggleEmailContent('email4')">
+                        <div class="d-flex align-items-start">
+                            <div class="me-3">
+                                <div class="user-avatar bg-success">
+                                    SY
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <span class="badge bg-warning text-dark me-2">Reminder</span>
+                                            Assignment 3 Due Tomorrow
+                                        </h6>
+                                        <small class="text-muted">
+                                            From: Academic System &lt;system@ug.edu.gh&gt;
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">Nov 12, 2024 9:00 AM</small>
+                                        <div class="mt-1">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted mb-0 email-preview">
+                                    This is a reminder that Assignment 3: Processor Design is due tomorrow at 11:59 PM...
+                                </p>
+                                
+                                <!-- Email Content -->
+                                <div id="email4" class="email-content mt-3" style="display: none;">
+                                    <div class="bg-light p-3 border rounded">
+                                        <p><strong>Subject:</strong> Assignment 3 Due Tomorrow</p>
+                                        <p><strong>Date:</strong> November 12, 2024 9:00 AM</p>
+                                        <p><strong>To:</strong> {{ section.course.code }} Students</p>
+                                        <hr>
+                                        <p>Dear Students,</p>
+                                        <p>This is an automated reminder that <strong>Assignment 3: Processor Design</strong> is due tomorrow, November 13, 2024 at 11:59 PM.</p>
+                                        
+                                        <div class="alert alert-warning">
+                                            <h6>Assignment Details:</h6>
+                                            <ul class="mb-0">
+                                                <li><strong>Course:</strong> {{ section.course.code }} - {{ section.course.name }}</li>
+                                                <li><strong>Assignment:</strong> Assignment 3: Processor Design</li>
+                                                <li><strong>Due Date:</strong> November 13, 2024 at 11:59 PM</li>
+                                                <li><strong>Submission:</strong> Via Drop Box</li>
+                                                <li><strong>Points:</strong> 100</li>
+                                            </ul>
+                                        </div>
+                                        
+                                        <p>If you haven't started yet, please begin immediately. Late submissions will be penalized according to the course policy.</p>
+                                        
+                                        <div class="mt-3">
+                                            <a href="{% url 'courses:section_dropbox' section.id %}" class="btn btn-primary me-2">
+                                                <i class="fas fa-upload"></i> Submit Assignment
+                                            </a>
+                                            <a href="{% url 'courses:section_assignments' section.id %}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-tasks"></i> View All Assignments
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <small class="text-muted">Showing 1-4 of 12 emails</small>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Statistics -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-chart-bar me-2"></i>
+            Email Activity Summary
+        </div>
+        
+        <div class="card-content">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-primary mb-1">12</div>
+                        <small class="text-muted">Total Emails</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-success mb-1">3</div>
+                        <small class="text-muted">Sent</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-info mb-1">9</div>
+                        <small class="text-muted">Received</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-warning mb-1">2</div>
+                        <small class="text-muted">Unread</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleEmailContent(emailId) {
+        const emailContent = document.getElementById(emailId);
+        const chevronIcon = emailContent.closest('.email-item').querySelector('.fa-chevron-down, .fa-chevron-up');
+        
+        if (emailContent.style.display === 'none' || emailContent.style.display === '') {
+            emailContent.style.display = 'block';
+            chevronIcon.classList.remove('fa-chevron-down');
+            chevronIcon.classList.add('fa-chevron-up');
+        } else {
+            emailContent.style.display = 'none';
+            chevronIcon.classList.remove('fa-chevron-up');
+            chevronIcon.classList.add('fa-chevron-down');
+        }
+    }
+    
+    // Email filtering
+    document.getElementById('emailFilter').addEventListener('change', function() {
+        const filterValue = this.value;
+        console.log('Filter changed to:', filterValue);
+        // In a real implementation, this would filter the email list
+    });
+</script>
+{% endblock %}

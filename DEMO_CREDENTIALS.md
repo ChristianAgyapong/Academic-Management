@@ -1,8 +1,8 @@
-# 🎓 SAMS - Student Academic Management System
+# 🎓 CTA - Chrix Tech Academic
 ## Complete Demo Setup with Login Credentials
 
 ### 🚀 System Overview
-The Student Academic Management System (SAMS) is now fully operational with comprehensive demo data, modern UI design, and complete password recovery functionality.
+The Chrix Tech Academic (CTA) is now fully operational with comprehensive demo data, modern UI design, and complete password recovery functionality.
 
 ### 🌐 Access URLs
 - **Main Application**: http://127.0.0.1:8000/login/
@@ -16,7 +16,7 @@ The Student Academic Management System (SAMS) is now fully operational with comp
 ### Super Administrator
 - **Username**: `admin`
 - **Password**: `admin123`
-- **Email**: `admin@sams.com`
+- **Email**: `admin@cta.com`
 - **Access**: Full system administration via Django admin panel
 
 ---
@@ -31,7 +31,7 @@ All teachers use the password: **`teacher123`**
 | `prof.asante` | UG002 | a.asante@ug.edu.gh | Mathematics |
 | `dr.osei` | UG003 | m.osei@ug.edu.gh | Physics |
 | `ms.antwi` | UG004 | g.antwi@ug.edu.gh | English Literature |
-| `teacher001` | EMP001 | teacher@sams.com | Computer Science |
+| `teacher001` | EMP001 | teacher@cta.com | Computer Science |
 
 ### 👨‍🏫 Teacher Login Instructions
 1. Go to http://127.0.0.1:8000/login/
@@ -47,7 +47,7 @@ All students use the password: **`student123`**
 
 | Username | Student ID | Email | Registration |
 |----------|------------|-------|--------------|
-| `student001` | STU001 | student@sams.com | REG2024001 |
+| `student001` | STU001 | student@cta.com | REG2024001 |
 | `student002` | 10957024 | ama.aidoo@st.ug.edu.gh | REG10957024 |
 | `student003` | 10957025 | kofi.annan@st.ug.edu.gh | REG10957025 |
 | `student004` | 10957026 | akosua.frema@st.ug.edu.gh | REG10957026 |
@@ -137,7 +137,7 @@ All students use the password: **`student123`**
 ### ✅ Completed Features
 - [x] User Authentication System
 - [x] Role-based Access Control (Admin/Teacher/Student)
-- [x] Modern Login Interface with University of Ghana styling
+- [x] Modern Login Interface with Chrix Tech Academic styling
 - [x] Complete Password Recovery System
 - [x] Course Management with Sections
 - [x] Grade Recording with Components
@@ -146,7 +146,7 @@ All students use the password: **`student123`**
 - [x] Demo Data Population
 - [x] Admin Panel Configuration
 
-### 🚀 How to Start Using SAMS
+### 🚀 How to Start Using CTA
 
 1. **Start the Server** (if not running):
    ```bash
@@ -217,4 +217,4 @@ Username: admin | Password: admin123
 
 ---
 
-*🎓 SAMS is now ready for comprehensive testing and demonstration with full user authentication, modern UI design, and complete password recovery functionality!*
+*🎓 CTA is now ready for comprehensive testing and demonstration with full user authentication, modern UI design, and complete password recovery functionality!*

@@ -1,0 +1,119 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Lessons Section -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-play-circle me-2"></i>
+            Lessons
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-sm btn-outline-primary active">All Lessons</button>
+                <button class="btn btn-sm btn-outline-secondary">Video Lectures</button>
+                <button class="btn btn-sm btn-outline-secondary">Reading Materials</button>
+            </div>
+
+            <div class="lessons-container">
+                <h4 class="h5 mb-3">Available Lessons 
+                    <small class="text-muted">({{ lessons.count }} items)</small>
+                </h4>
+                
+                {% if lessons %}
+                    <div class="row">
+                        {% for lesson in lessons %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="content-card">
+                                <div class="card-content">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3">
+                                            {% if lesson.file.name|lower|slice:"-4:" == ".mp4" or lesson.file.name|lower|slice:"-4:" == ".avi" or lesson.file.name|lower|slice:"-4:" == ".mov" %}
+                                                <i class="fas fa-play-circle fa-2x text-primary"></i>
+                                            {% elif lesson.file.name|lower|slice:"-4:" == ".pdf" %}
+                                                <i class="fas fa-file-pdf fa-2x text-danger"></i>
+                                            {% elif lesson.file.name|lower|slice:"-5:" == ".docx" or lesson.file.name|lower|slice:"-4:" == ".doc" %}
+                                                <i class="fas fa-file-word fa-2x text-primary"></i>
+                                            {% elif lesson.file.name|lower|slice:"-5:" == ".pptx" or lesson.file.name|lower|slice:"-4:" == ".ppt" %}
+                                                <i class="fas fa-file-powerpoint fa-2x text-warning"></i>
+                                            {% else %}
+                                                <i class="fas fa-file fa-2x text-secondary"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">{{ lesson.title }}</h6>
+                                            <p class="text-muted small mb-2">{{ lesson.description|default:"No description available"|truncatechars:80 }}</p>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ lesson.upload_date|date:"M d, Y" }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <span class="badge badge-custom">Lesson</span>
+                                        <div>
+                                            <a href="{{ lesson.file.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <a href="{{ lesson.file.url }}" class="btn btn-sm btn-outline-secondary ms-1" download>
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-play-circle"></i>
+                        <h5>No Lessons Available</h5>
+                        <p class="text-muted">Course lessons will be uploaded by your instructor soon.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Progress Card -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-chart-line me-2"></i>
+            Learning Progress
+        </div>
+        
+        <div class="card-content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center p-3">
+                        <div class="h2 text-primary mb-1">{{ lessons.count }}</div>
+                        <small class="text-muted">Total Lessons</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3">
+                        <div class="h2 text-success mb-1">0</div>
+                        <small class="text-muted">Completed</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3">
+                        <div class="h2 text-warning mb-1">{{ lessons.count }}</div>
+                        <small class="text-muted">Remaining</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-3">
+                        <div class="h2 text-info mb-1">0%</div>
+                        <small class="text-muted">Progress</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress mt-3" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

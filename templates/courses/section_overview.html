@@ -1,0 +1,87 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+<!-- Course Info Card -->
+<div class="content-card">
+    <div class="card-header">
+        Course Information
+    </div>
+    <div class="card-body">
+        <table class="table table-borderless">
+            <tr>
+                <td width="120"><strong>Course Title:</strong></td>
+                <td>{{ section.course.title }}</td>
+            </tr>
+            <tr>
+                <td><strong>Course Code:</strong></td>
+                <td>{{ section.course.code }}</td>
+            </tr>
+            <tr>
+                <td><strong>Credits:</strong></td>
+                <td>{{ section.course.credits|default:"3" }}</td>
+            </tr>
+            <tr>
+                <td><strong>Instructor:</strong></td>
+                <td>{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</td>
+            </tr>
+            <tr>
+                <td><strong>Section:</strong></td>
+                <td>{{ section.section_number|default:"001" }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- Course Description -->
+<div class="content-card">
+    <div class="card-header">
+        Course Description
+    </div>
+    <div class="card-body">
+        <p>{{ section.course.description|default:"Welcome to this course. Please check announcements and resources regularly for updates." }}</p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row">
+    <div class="col-md-4">
+        <div class="content-card">
+            <div class="card-header">Students Enrolled</div>
+            <div class="card-body text-center">
+                <h3>{{ total_students|default:25 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="content-card">
+            <div class="card-header">Assignments</div>
+            <div class="card-body text-center">
+                <h3>{{ total_assignments|default:8 }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="content-card">
+            <div class="card-header">Announcements</div>
+            <div class="card-body text-center">
+                <h3>{{ total_announcements|default:12 }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="content-card">
+    <div class="card-header">
+        Recent Activity
+    </div>
+    <div class="card-body">
+        <ul class="list-unstyled mb-0">
+            <li class="py-1"><small class="text-muted">Today</small> - Assignment 3 due date reminder posted</li>
+            <li class="py-1"><small class="text-muted">Yesterday</small> - New resource uploaded: Lecture Notes Chapter 5</li>
+            <li class="py-1"><small class="text-muted">2 days ago</small> - Quiz 2 results published</li>
+            <li class="py-1"><small class="text-muted">3 days ago</small> - Discussion forum: Mid-term preparation opened</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

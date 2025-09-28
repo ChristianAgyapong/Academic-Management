@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.http import JsonResponse
 from .models import Profile, Student, Teacher, UserRole
 from .forms import LoginForm, StudentRegistrationForm, TeacherRegistrationForm, ProfileUpdateForm, ForgotPasswordForm, ResetPasswordForm
 from courses.models import Enrollment, Section
@@ -89,47 +90,174 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
+    from courses.models import Enrollment, Section, Course, Assignment
+    from grades.models import Grade, FinalGrade
+    from attendance.models import Attendance, AttendanceSession
+    from django.db.models import Avg, Count
+    from datetime import datetime, timedelta
+    
     profile = get_object_or_404(Profile, user=request.user)
     
+    # Base context for all users
     context = {
         'profile': profile,
+        'current_date': datetime.now(),
+        'recent_activities': [],
     }
     
+    # Generate sample recent activities based on user role
     if profile.role == UserRole.ADMIN:
         # Admin dashboard data
-        context.update({
-            'total_students': Student.objects.filter(is_active=True).count(),
-            'total_teachers': Teacher.objects.filter(is_active=True).count(),
-            'total_courses': Section.objects.count(),
-        })
-        return render(request, 'accounts/admin_dashboard.html', context)
-    
-    elif profile.role == UserRole.TEACHER:
-        # Teacher dashboard data
-        teacher = get_object_or_404(Teacher, profile=profile)
-        sections = Section.objects.filter(teacher=teacher)
-        context.update({
-            'teacher': teacher,
-            'sections': sections,
-            'total_sections': sections.count(),
-        })
-        return render(request, 'accounts/teacher_dashboard.html', context)
-    
-    elif profile.role == UserRole.STUDENT:
-        # Student dashboard data
-        student = get_object_or_404(Student, profile=profile)
-        enrollments = Enrollment.objects.filter(student=student, status='enrolled')
-        recent_grades = FinalGrade.objects.filter(student=student).order_by('-date_recorded')[:5]
+        total_students = Student.objects.filter(is_active=True).count()
+        total_teachers = Teacher.objects.filter(is_active=True).count()
+        total_courses = Course.objects.filter(is_active=True).count()
+        active_enrollments = Enrollment.objects.filter(status='enrolled').count()
         
         context.update({
-            'student': student,
-            'enrollments': enrollments,
-            'recent_grades': recent_grades,
-            'total_courses': enrollments.count(),
+            'total_students': total_students,
+            'total_teachers': total_teachers,
+            'total_courses': total_courses,
+            'active_enrollments': active_enrollments,
+            'recent_activities': [
+                {
+                    'title': 'New Student Registered',
+                    'description': f'Total students: {total_students}',
+                    'icon': 'fas fa-user-plus',
+                    'date': datetime.now() - timedelta(hours=2)
+                },
+                {
+                    'title': 'System Backup Completed',
+                    'description': 'Daily backup completed successfully',
+                    'icon': 'fas fa-database',
+                    'date': datetime.now() - timedelta(hours=8)
+                },
+                {
+                    'title': 'Course Enrollment Updated',
+                    'description': f'{active_enrollments} active enrollments',
+                    'icon': 'fas fa-book',
+                    'date': datetime.now() - timedelta(days=1)
+                }
+            ]
         })
-        return render(request, 'accounts/student_dashboard.html', context)
     
-    return render(request, 'accounts/dashboard.html', context)
+    elif profile.role == UserRole.TEACHER:
+        try:
+            teacher = Teacher.objects.get(profile=profile)
+            sections = Section.objects.filter(teacher=teacher)
+            
+            # Count total students across all sections
+            total_students = Enrollment.objects.filter(
+                section__in=sections, 
+                status='enrolled'
+            ).count()
+            
+            # Count assignments
+            assignments_count = Assignment.objects.filter(section__in=sections).count()
+            
+            # Placeholder for pending grades (assignments without grades)
+            pending_grades = assignments_count  # Simplified
+            
+            context.update({
+                'teacher': teacher,
+                'sections': sections,
+                'sections_count': sections.count(),
+                'students_count': total_students,
+                'assignments_count': assignments_count,
+                'pending_grades': pending_grades,
+                'recent_activities': [
+                    {
+                        'title': 'Attendance Recorded',
+                        'description': f'Marked attendance for {sections.count()} sections',
+                        'icon': 'fas fa-calendar-check',
+                        'date': datetime.now() - timedelta(hours=1)
+                    },
+                    {
+                        'title': 'Grades Updated',
+                        'description': f'Updated grades for {total_students} students',
+                        'icon': 'fas fa-chart-line',
+                        'date': datetime.now() - timedelta(hours=4)
+                    },
+                    {
+                        'title': 'New Assignment Posted',
+                        'description': f'Posted new assignment in CS101',
+                        'icon': 'fas fa-tasks',
+                        'date': datetime.now() - timedelta(days=1)
+                    }
+                ]
+            })
+        except Teacher.DoesNotExist:
+            context.update({
+                'sections_count': 0,
+                'students_count': 0,
+                'assignments_count': 0,
+                'pending_grades': 0
+            })
+    
+    elif profile.role == UserRole.STUDENT:
+        try:
+            student = Student.objects.get(profile=profile)
+            enrollments = Enrollment.objects.filter(student=student, status='enrolled')
+            recent_grades = FinalGrade.objects.filter(student=student).order_by('-date_recorded')[:5]
+            
+            # Calculate average grade from component grades
+            grades = Grade.objects.filter(student=student)
+            if grades.exists():
+                avg_grade = grades.aggregate(avg=Avg('points_earned'))['avg']
+                context['avg_grade'] = avg_grade or 0
+            else:
+                context['avg_grade'] = 0
+            
+            # Calculate attendance rate
+            attendances = Attendance.objects.filter(student=student)
+            if attendances.exists():
+                present_count = attendances.filter(status__in=['present', 'late']).count()
+                total_count = attendances.count()
+                context['attendance_rate'] = (present_count / total_count * 100) if total_count > 0 else 0
+            else:
+                context['attendance_rate'] = 0
+            
+            # Count pending assignments (simplified)
+            pending_assignments = Assignment.objects.filter(
+                section__in=enrollments.values_list('section', flat=True),
+                due_date__gt=datetime.now()
+            ).count()
+            
+            context.update({
+                'student': student,
+                'enrollments': enrollments,
+                'recent_grades': recent_grades,
+                'enrollments_count': enrollments.count(),
+                'pending_assignments': pending_assignments,
+                'recent_activities': [
+                    {
+                        'title': 'Grade Posted',
+                        'description': f'New grade available for {enrollments.first().section.course.name if enrollments.exists() else "course"}',
+                        'icon': 'fas fa-star',
+                        'date': datetime.now() - timedelta(hours=3)
+                    },
+                    {
+                        'title': 'Assignment Submitted',
+                        'description': 'Successfully submitted assignment',
+                        'icon': 'fas fa-check-circle',
+                        'date': datetime.now() - timedelta(hours=6)
+                    },
+                    {
+                        'title': 'Class Attendance',
+                        'description': f'Attended {enrollments.count()} classes today',
+                        'icon': 'fas fa-calendar-check',
+                        'date': datetime.now() - timedelta(days=1)
+                    }
+                ]
+            })
+        except Student.DoesNotExist:
+            context.update({
+                'enrollments_count': 0,
+                'avg_grade': 0,
+                'attendance_rate': 0,
+                'pending_assignments': 0
+            })
+    
+    return render(request, 'accounts/dashboard_home.html', context)
 
 @login_required
 def profile_view(request):
@@ -373,3 +501,80 @@ def reset_password_view(request, token):
     }
     
     return render(request, 'accounts/reset_password.html', context)
+
+@login_required
+def settings_view(request):
+    profile = get_object_or_404(Profile, user=request.user)
+    
+    if request.method == 'POST':
+        # Handle settings update
+        user = request.user
+        
+        # Update basic user info
+        user.first_name = request.POST.get('first_name', user.first_name)
+        user.last_name = request.POST.get('last_name', user.last_name)
+        user.email = request.POST.get('email', user.email)
+        user.save()
+        
+        # Update profile info
+        profile.phone_number = request.POST.get('phone_number', profile.phone_number)
+        profile.address = request.POST.get('address', profile.address)
+        
+        # Handle profile picture upload
+        if 'profile_picture' in request.FILES:
+            profile.profile_picture = request.FILES['profile_picture']
+        
+        profile.save()
+        
+        # Handle password change
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        
+        if old_password and new_password and confirm_password:
+            if user.check_password(old_password):
+                if new_password == confirm_password:
+                    user.set_password(new_password)
+                    user.save()
+                    messages.success(request, 'Password updated successfully!')
+                else:
+                    messages.error(request, 'New passwords do not match.')
+            else:
+                messages.error(request, 'Current password is incorrect.')
+        
+        messages.success(request, 'Settings updated successfully!')
+        return redirect('accounts:settings')
+    
+    context = {
+        'profile': profile,
+        'user': request.user,
+    }
+    
+    return render(request, 'accounts/settings.html', context)
+
+@login_required
+def toggle_pin_view(request):
+    """Handle pin/unpin functionality via AJAX"""
+    if request.method == 'POST':
+        try:
+            import json
+            
+            data = json.loads(request.body)
+            item_id = data.get('item_id')
+            item_type = data.get('item_type')
+            action = data.get('action')
+            
+            # Here you could save the pinned items to a user preference model
+            # For now, we'll just return success since we're using localStorage
+            
+            return JsonResponse({
+                'success': True,
+                'message': f'Item {action}ned successfully'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

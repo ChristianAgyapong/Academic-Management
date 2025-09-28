@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAMS - Student Academic Management System</title>
+    <title>CTA - Chrix Tech Academic</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -440,8 +440,8 @@
         <div class="right-section">
             <!-- Logo Section -->
             <div class="logo-section">
-                <div class="logo">SAMS</div>
-                <p class="logo-subtitle">Student Academic Management System</p>
+                <div class="logo">CTA</div>
+                <p class="logo-subtitle">Chrix Tech Academic System</p>
             </div>
 
             <!-- Alert Messages -->
@@ -500,14 +500,13 @@
     <!-- Footer -->
     <div class="footer">
         <p class="footer-text">
-            © 2025 All rights reserved<br>
-            Powered By <i class="fas fa-graduation-cap" style="color: #ffd700; margin: 0 3px; font-size: 11px;"></i> <span class="footer-brand">SAMS</span>
+            <i class="fas fa-graduation-cap"></i> <strong>Student Portal</strong> - Access your courses, grades, and academic progress
         </p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Handle user type selection
+        // Handle user type selection with theme switching
         const studentOption = document.getElementById('student-option');
         const staffOption = document.getElementById('staff-option');
         const studentRadio = document.getElementById('user-student');
@@ -515,16 +514,35 @@
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const selectedUserType = document.getElementById('selected-user-type');
+        const body = document.body;
+        const loginBtn = document.querySelector('.login-btn');
+        const logoTitle = document.querySelector('.logo-title');
+        const logoSubtitle = document.querySelector('.logo-subtitle');
 
         function updatePlaceholders(userType) {
             if (userType === 'student') {
                 usernameInput.placeholder = 'Student ID';
                 passwordInput.placeholder = 'Password';
                 selectedUserType.value = 'student';
+                
+                // Switch to student theme
+                body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                loginBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                loginBtn.innerHTML = '<i class="fas fa-user-graduate"></i> Student Login';
+                logoTitle.innerHTML = '<i class="fas fa-user-graduate"></i> Student Portal';
+                logoSubtitle.textContent = 'Your Academic Journey Starts Here';
+                
             } else {
                 usernameInput.placeholder = 'Employee ID';
                 passwordInput.placeholder = 'Password';
                 selectedUserType.value = 'staff';
+                
+                // Switch to faculty theme
+                body.style.background = 'linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%)';
+                loginBtn.style.background = 'linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%)';
+                loginBtn.innerHTML = '<i class="fas fa-chalkboard-teacher"></i> Faculty Login';
+                logoTitle.innerHTML = '<i class="fas fa-chalkboard-teacher"></i> Faculty Portal';
+                logoSubtitle.textContent = 'Professional Teaching Excellence';
             }
         }
 
@@ -534,6 +552,7 @@
             studentOption.classList.add('active');
             staffOption.classList.remove('active');
             updatePlaceholders('student');
+            updateFooterMessage('student');
         });
 
         staffOption.addEventListener('click', function() {
@@ -542,7 +561,17 @@
             staffOption.classList.add('active');
             studentOption.classList.remove('active');
             updatePlaceholders('staff');
+            updateFooterMessage('staff');
         });
+
+        function updateFooterMessage(userType) {
+            const footerText = document.querySelector('.footer-text');
+            if (userType === 'student') {
+                footerText.innerHTML = '<i class="fas fa-graduation-cap"></i> <strong>Student Portal</strong> - Access your courses, grades, and academic progress';
+            } else {
+                footerText.innerHTML = '<i class="fas fa-university"></i> <strong>Faculty Portal</strong> - Manage classes, grade students, and track progress';
+            }
+        }
 
         // Handle radio button changes
         studentRadio.addEventListener('change', function() {
@@ -561,8 +590,9 @@
             }
         });
 
-        // Initialize
+        // Initialize with student theme by default
         updatePlaceholders('student');
+        updateFooterMessage('student');
     </script>
 </body>
 </html>

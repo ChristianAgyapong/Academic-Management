@@ -14,6 +14,12 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password_view, name='forgot_password'),
     path('reset-password/<str:token>/', views.reset_password_view, name='reset_password'),
     
+    # Settings
+    path('settings/', views.settings_view, name='settings'),
+    
+    # Pin/Unpin functionality
+    path('toggle-pin/', views.toggle_pin_view, name='toggle_pin'),
+    
     # Admin URLs
     path('admin/students/', views.manage_students_view, name='manage_students'),
     path('admin/teachers/', views.manage_teachers_view, name='manage_teachers'),

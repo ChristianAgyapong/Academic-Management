@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - CTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .main-header {
+            background: #1e3a8a;
+            color: white;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hamburger-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .ug-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .ug-logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .breadcrumb-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #e5e7eb;
+        }
+
+        .breadcrumb-nav a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .breadcrumb-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            z-index: 1100;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar-header {
+            background: #1e3a8a;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            padding: 0;
+        }
+
+        .menu-section {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .menu-section-title {
+            padding: 0.75rem 1rem;
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #374151;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .menu-item:hover {
+            background: #f3f4f6;
+            color: #1e3a8a;
+            text-decoration: none;
+        }
+
+        .menu-item.active {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .menu-item i {
+            width: 20px;
+            margin-right: 0.5rem;
+        }
+
+        /* Pinned Items Styles */
+        .pinned-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pinned-content {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .pinned-details {
+            margin-left: 0.5rem;
+        }
+
+        .pinned-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e3a8a;
+        }
+
+        .pinned-subtitle {
+            font-size: 0.75rem;
+            color: #6b7280 !important;
+            line-height: 1.2;
+        }
+
+        .pin-toggle {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 0.8rem;
+            padding: 0.25rem;
+            border-radius: 3px;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+
+        .pinned-item:hover .pin-toggle {
+            opacity: 1;
+        }
+
+        .pin-toggle:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .menu-section-title .fas.fa-thumbtack {
+            font-size: 0.8rem;
+            margin-right: 0.3rem;
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 0;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .content-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            margin-bottom: 0;
+        }
+
+        /* Cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-link-custom {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .btn-link-custom:hover {
+            background: #f3f4f6;
+            text-decoration: none;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            float: right;
+            font-size: 2rem;
+            color: #3b82f6;
+            opacity: 0.3;
+        }
+
+        /* Message of the Day */
+        .motd-card {
+            background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%);
+            border: none;
+            color: #92400e;
+        }
+
+        .motd-card .card-title {
+            color: #92400e;
+        }
+
+        /* Calendar Widget */
+        .calendar-mini {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background: #1e3a8a;
+            color: white;
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .calendar-body {
+            padding: 1rem;
+        }
+
+        .calendar-date {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #1e3a8a;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #374151;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #f9fafb;
+            border-color: #3b82f6;
+            color: #1e3a8a;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #dbeafe;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Announcements */
+        .announcement-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .announcement-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1e3a8a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .announcement-content h6 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .announcement-content p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .announcement-date {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CSRF Token for AJAX -->
+    {% csrf_token %}
+    
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="hamburger-btn" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="ug-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>CHRIX TECH ACADEMIC</span>
+            </div>
+            <nav class="breadcrumb-nav">
+                <a href="{% url 'accounts:dashboard' %}">Home</a>
+                <i class="fas fa-angle-right"></i>
+                <span>Overview</span>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <div class="user-avatar" data-bs-toggle="dropdown">
+                    {{ user.first_name.0|default:"U" }}{{ user.last_name.0|default:"" }}
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                        <i class="fas fa-user"></i> Profile
+                    </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span>Navigation Menu</span>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-menu">
+            <!-- Home Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Home</div>
+                <a href="{% url 'accounts:dashboard' %}" class="menu-item active">
+                    <i class="fas fa-home"></i> Overview
+                </a>
+                <a href="{% url 'accounts:profile' %}" class="menu-item">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="{% url 'calendar_app:calendar' %}" class="menu-item">
+                    <i class="fas fa-calendar-alt"></i> Calendar
+                </a>
+            </div>
+
+            <!-- Pinned Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">
+                    <i class="fas fa-thumbtack me-2"></i>Pinned
+                </div>
+                
+                <!-- Pinned Items based on user role -->
+                {% if user.profile.role == 'student' %}
+                    {% if enrollments %}
+                        {% for enrollment in enrollments|slice:":6" %}
+                        <a href="{% url 'courses:section_detail' enrollment.section.id %}" class="menu-item pinned-item">
+                            <div class="pinned-content">
+                                <i class="fas fa-star text-warning"></i>
+                                <div class="pinned-details">
+                                    <span class="pinned-title">{{ enrollment.section.course.code }} {{ enrollment.section.section_number }}</span>
+                                    <small class="pinned-subtitle d-block text-muted">{{ enrollment.section.course.name|truncatechars:25 }}</small>
+                                </div>
+                            </div>
+                            <button class="pin-toggle" onclick="togglePin(event, '{{ enrollment.section.id }}', 'section')" title="Unpin">
+                                <i class="fas fa-thumbtack"></i>
+                            </button>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="menu-item text-muted">
+                            <i class="fas fa-info-circle"></i> No pinned items
+                        </div>
+                    {% endif %}
+                {% elif user.profile.role == 'teacher' %}
+                    {% if sections %}
+                        {% for section in sections|slice:":6" %}
+                        <a href="{% url 'courses:teacher_section_detail' section.id %}" class="menu-item pinned-item">
+                            <div class="pinned-content">
+                                <i class="fas fa-star text-warning"></i>
+                                <div class="pinned-details">
+                                    <span class="pinned-title">{{ section.course.code }} {{ section.section_number }}</span>
+                                    <small class="pinned-subtitle d-block text-muted">{{ section.course.name|truncatechars:25 }}</small>
+                                </div>
+                            </div>
+                            <button class="pin-toggle" onclick="togglePin(event, '{{ section.id }}', 'section')" title="Unpin">
+                                <i class="fas fa-thumbtack"></i>
+                            </button>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="menu-item text-muted">
+                            <i class="fas fa-info-circle"></i> No pinned items
+                        </div>
+                    {% endif %}
+                {% elif user.profile.role == 'admin' %}
+                    <a href="{% url 'accounts:manage_students' %}" class="menu-item pinned-item">
+                        <div class="pinned-content">
+                            <i class="fas fa-star text-warning"></i>
+                            <div class="pinned-details">
+                                <span class="pinned-title">Student Management</span>
+                                <small class="pinned-subtitle d-block text-muted">Manage student accounts</small>
+                            </div>
+                        </div>
+                        <button class="pin-toggle" onclick="togglePin(event, 'students', 'admin')" title="Unpin">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                    </a>
+                    <a href="{% url 'accounts:manage_teachers' %}" class="menu-item pinned-item">
+                        <div class="pinned-content">
+                            <i class="fas fa-star text-warning"></i>
+                            <div class="pinned-details">
+                                <span class="pinned-title">Teacher Management</span>
+                                <small class="pinned-subtitle d-block text-muted">Manage teacher accounts</small>
+                            </div>
+                        </div>
+                        <button class="pin-toggle" onclick="togglePin(event, 'teachers', 'admin')" title="Unpin">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                    </a>
+                    <a href="{% url 'courses:manage_courses' %}" class="menu-item pinned-item">
+                        <div class="pinned-content">
+                            <i class="fas fa-star text-warning"></i>
+                            <div class="pinned-details">
+                                <span class="pinned-title">Course Management</span>
+                                <small class="pinned-subtitle d-block text-muted">Manage courses & sections</small>
+                            </div>
+                        </div>
+                        <button class="pin-toggle" onclick="togglePin(event, 'courses', 'admin')" title="Unpin">
+                            <i class="fas fa-thumbtack"></i>
+                        </button>
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if user.profile.role == 'student' %}
+            <!-- Student Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Academic</div>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-chart-line"></i> Grades
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-calendar-check"></i> Attendance
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-file-alt"></i> Assignments
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-calendar"></i> Schedule
+                </a>
+            </div>
+            {% elif user.profile.role == 'teacher' %}
+            <!-- Teacher Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Teaching</div>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-chalkboard"></i> My Sections
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-users"></i> Students
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-tasks"></i> Grade Management
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-user-check"></i> Attendance Tracking
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-clipboard-list"></i> Assignments
+                </a>
+            </div>
+            {% elif user.profile.role == 'admin' %}
+            <!-- Admin Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Administration</div>
+                <a href="{% url 'accounts:manage_students' %}" class="menu-item">
+                    <i class="fas fa-user-graduate"></i> Manage Students
+                </a>
+                <a href="{% url 'accounts:manage_teachers' %}" class="menu-item">
+                    <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
+                </a>
+                <a href="{% url 'accounts:add_student' %}" class="menu-item">
+                    <i class="fas fa-user-plus"></i> Add Student
+                </a>
+                <a href="{% url 'accounts:add_teacher' %}" class="menu-item">
+                    <i class="fas fa-plus-circle"></i> Add Teacher
+                </a>
+                <a href="/admin/" class="menu-item">
+                    <i class="fas fa-cog"></i> System Admin
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Resources Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Resources</div>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-calendar"></i> Calendar
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-bullhorn"></i> Announcements
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-question-circle"></i> Help & Support
+                </a>
+            </div>
+
+            <!-- Account Section -->
+            <div class="menu-section">
+                <div class="menu-section-title">Account</div>
+                <a href="{% url 'accounts:forgot_password' %}" class="menu-item">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fas fa-cog"></i> Preferences
+                </a>
+                <a href="{% url 'accounts:logout' %}" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-header">
+            <div>
+                <h1 class="page-title">Welcome, {{ user.get_full_name|default:user.username }}</h1>
+                <p class="page-subtitle">{{ user.profile.get_role_display }} Dashboard - {{ current_date|date:"F d, Y" }}</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            {% if user.profile.role == 'student' %}
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-value">{{ enrollments_count|default:0 }}</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-value">{{ avg_grade|default:0|floatformat:1 }}%</div>
+                <div class="stat-label">Average Grade</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-value">{{ attendance_rate|default:0|floatformat:1 }}%</div>
+                <div class="stat-label">Attendance Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="stat-value">{{ pending_assignments|default:0 }}</div>
+                <div class="stat-label">Pending Tasks</div>
+            </div>
+            {% elif user.profile.role == 'teacher' %}
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chalkboard"></i>
+                </div>
+                <div class="stat-value">{{ sections_count|default:0 }}</div>
+                <div class="stat-label">Teaching Sections</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">{{ students_count|default:0 }}</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-value">{{ assignments_count|default:0 }}</div>
+                <div class="stat-label">Assignments</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-value">{{ pending_grades|default:0 }}</div>
+                <div class="stat-label">Pending Grades</div>
+            </div>
+            {% elif user.profile.role == 'admin' %}
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="stat-value">{{ total_students|default:0 }}</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <div class="stat-value">{{ total_teachers|default:0 }}</div>
+                <div class="stat-label">Total Teachers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-value">{{ total_courses|default:0 }}</div>
+                <div class="stat-label">Total Courses</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="stat-value">{{ active_enrollments|default:0 }}</div>
+                <div class="stat-label">Active Enrollments</div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Message of the Day -->
+                <div class="dashboard-card motd-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bullhorn"></i>
+                            Message Of The Day
+                        </h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn-link-custom">Options</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4 style="color: #92400e; margin-bottom: 1rem;">Academic Excellence Reminder</h4>
+                        <p style="color: #92400e; margin-bottom: 1rem;">
+                            Welcome to the new academic semester! Stay committed to your academic goals and maintain excellence in all your endeavors.
+                        </p>
+                        <ul style="color: #92400e; margin-bottom: 1rem;">
+                            <li>Check your course schedules regularly</li>
+                            <li>Submit assignments before deadlines</li>
+                            <li>Maintain good attendance in all classes</li>
+                            <li>Utilize office hours for academic support</li>
+                        </ul>
+                        <p style="color: #92400e; margin-bottom: 0;">
+                            <strong>For any academic issues or concerns, contact the Academic Support Team at 
+                            <a href="mailto:academic@ug.edu.gh" style="color: #92400e;">academic@ug.edu.gh</a></strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-clock"></i>
+                            Recent Activities
+                        </h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn-link-custom">View All</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_activities %}
+                            {% for activity in recent_activities %}
+                            <div class="announcement-item">
+                                <div class="announcement-icon">
+                                    <i class="{{ activity.icon }}"></i>
+                                </div>
+                                <div class="announcement-content">
+                                    <h6>{{ activity.title }}</h6>
+                                    <p>{{ activity.description }}</p>
+                                    <div class="announcement-date">{{ activity.date|timesince }} ago</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No recent activities to display</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-rocket"></i>
+                            Quick Actions
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-actions">
+                            {% if user.profile.role == 'student' %}
+                            <a href="{% url 'calendar_app:create_event' %}" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-plus-circle"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Add Reminder</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Create personal reminders</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn" onclick="window.print()">
+                                <div class="action-icon">
+                                    <i class="fas fa-download"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Download Transcript</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Get academic records</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Academic Support</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Get help and guidance</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Notifications</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">View recent updates</div>
+                                </div>
+                            </a>
+                            {% elif user.profile.role == 'teacher' %}
+                            <a href="{% url 'calendar_app:create_event' %}" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Schedule Class</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Add new class session</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-file-upload"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Upload Material</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Share course resources</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Class Analytics</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">View performance reports</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Message Students</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Send announcements</div>
+                                </div>
+                            </a>
+                            {% elif user.profile.role == 'admin' %}
+                            <a href="{% url 'calendar_app:create_event' %}" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Create System Event</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Add academic calendar events</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">System Analytics</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">View system performance</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Backup Data</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">System backup & restore</div>
+                                </div>
+                            </a>
+                            <a href="#" class="action-btn">
+                                <div class="action-icon">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600;">Send Announcements</div>
+                                    <div style="font-size: 0.85rem; color: #6b7280;">Notify all users</div>
+                                </div>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Calendar Widget -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar"></i>
+                            Calendar
+                        </h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn-link-custom">View Full</a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="calendar-mini">
+                            <div class="calendar-header">
+                                {{ current_date|date:"F Y" }}
+                            </div>
+                            <div class="calendar-body">
+                                <div class="calendar-date">
+                                    {{ current_date|date:"d" }}
+                                </div>
+                                <div class="text-center text-muted">
+                                    {{ current_date|date:"l" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Announcements -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-bullhorn"></i>
+                            Announcements
+                        </h3>
+                        <div class="card-actions">
+                            <a href="#" class="btn-link-custom">View All</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="announcement-item">
+                            <div class="announcement-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="announcement-content">
+                                <h6>New Semester Registration</h6>
+                                <p>Registration for the upcoming semester is now open. Please complete your registration before the deadline.</p>
+                                <div class="announcement-date">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="announcement-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="announcement-content">
+                                <h6>System Maintenance</h6>
+                                <p>Scheduled maintenance will occur this weekend. Some services may be temporarily unavailable.</p>
+                                <div class="announcement-date">1 day ago</div>
+                            </div>
+                        </div>
+                        <div class="announcement-item">
+                            <div class="announcement-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="announcement-content">
+                                <h6>Academic Calendar Update</h6>
+                                <p>The academic calendar has been updated with new important dates and deadlines.</p>
+                                <div class="announcement-date">3 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle functionality
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebarClose');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openSidebar() {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        sidebarToggle.addEventListener('click', openSidebar);
+        sidebarClose.addEventListener('click', closeSidebar);
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+
+        // Handle responsive behavior
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && sidebar.classList.contains('active')) {
+                closeSidebar();
+            }
+        });
+
+        // Pin/Unpin functionality
+        function togglePin(event, itemId, itemType) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const button = event.target.closest('.pin-toggle');
+            const menuItem = event.target.closest('.pinned-item');
+            
+            // Get current pinned items from localStorage
+            let pinnedItems = JSON.parse(localStorage.getItem('pinnedItems') || '[]');
+            
+            const itemKey = `${itemType}_${itemId}`;
+            const isCurrentlyPinned = pinnedItems.includes(itemKey);
+            
+            if (isCurrentlyPinned) {
+                // Unpin item
+                pinnedItems = pinnedItems.filter(item => item !== itemKey);
+                button.innerHTML = '<i class="fas fa-thumbtack"></i>';
+                button.title = 'Pin';
+                
+                // Add animation and remove item
+                menuItem.style.opacity = '0.5';
+                setTimeout(() => {
+                    menuItem.remove();
+                    // Show "No pinned items" message if no items left
+                    const pinnedSection = document.querySelector('.menu-section:nth-child(2) .menu-section-title').nextElementSibling;
+                    if (!document.querySelector('.pinned-item')) {
+                        const noItemsMsg = document.createElement('div');
+                        noItemsMsg.className = 'menu-item text-muted';
+                        noItemsMsg.innerHTML = '<i class="fas fa-info-circle"></i> No pinned items';
+                        pinnedSection.appendChild(noItemsMsg);
+                    }
+                }, 200);
+            } else {
+                // Pin item
+                pinnedItems.push(itemKey);
+                button.innerHTML = '<i class="fas fa-thumbtack"></i>';
+                button.title = 'Unpin';
+                
+                // Visual feedback
+                button.style.color = '#dc2626';
+                setTimeout(() => {
+                    button.style.color = '';
+                }, 500);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('pinnedItems', JSON.stringify(pinnedItems));
+            
+            // Optional: Send to server via AJAX
+            fetch('{% url "accounts:toggle_pin" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: JSON.stringify({
+                    item_id: itemId,
+                    item_type: itemType,
+                    action: isCurrentlyPinned ? 'unpin' : 'pin'
+                })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      console.log('Pin status updated successfully');
+                  }
+              })
+              .catch(error => {
+                  console.log('Pin update failed, using localStorage only');
+              });
+        }
+
+        // Initialize pinned items on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const pinnedItems = JSON.parse(localStorage.getItem('pinnedItems') || '[]');
+            
+            // Update pin button states based on localStorage
+            document.querySelectorAll('.pin-toggle').forEach(button => {
+                const menuItem = button.closest('.pinned-item');
+                const itemId = button.getAttribute('onclick').match(/'([^']*)', '([^']*)'/);
+                if (itemId) {
+                    const itemKey = `${itemId[2]}_${itemId[1]}`;
+                    if (pinnedItems.includes(itemKey)) {
+                        button.title = 'Unpin';
+                        button.style.color = '#dc2626';
+                    } else {
+                        button.title = 'Pin';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

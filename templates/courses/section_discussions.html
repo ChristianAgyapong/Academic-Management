@@ -1,0 +1,327 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Course Discussions Card -->
+    <div class="content-card">
+        <div class="d-flex align-items-center justify-content-between card-title">
+            <span>
+                <i class="fas fa-comments me-2"></i>
+                Course Discussions
+            </span>
+            <a href="#" class="link-btn">
+                <i class="fas fa-link"></i> Link
+            </a>
+        </div>
+        
+        <div class="card-content">
+            <div class="d-flex gap-3 mb-3">
+                <button class="btn btn-sm btn-outline-primary active">All Topics</button>
+                <button class="btn btn-sm btn-outline-secondary">My Posts</button>
+                <button class="btn btn-sm btn-outline-info">Unread</button>
+                <button class="btn btn-sm btn-success ms-auto">
+                    <i class="fas fa-plus"></i> New Topic
+                </button>
+            </div>
+
+            <div class="discussions-container">
+                <h4 class="h5 mb-3">Discussion Forum 
+                    <small class="text-muted">(5 topics, 23 posts)</small>
+                </h4>
+                
+                <!-- Discussion Topics -->
+                <div class="discussion-topics">
+                    <!-- Sample Discussion Topic 1 -->
+                    <div class="list-item">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="user-avatar bg-primary">
+                                    {{ section.teacher.profile.user.username|slice:":2"|upper }}
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="fas fa-thumbtack text-warning me-1"></i>
+                                            Course Guidelines and Expectations
+                                        </h6>
+                                        <small class="text-muted">
+                                            by {{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}
+                                            • {{ section.semester.start_date|date:"M d, Y g:i A" }}
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-success">Pinned</span>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    Welcome to the course discussion forum! Please review the course guidelines and feel free to ask any questions...
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-light text-dark">3 replies</span>
+                                        <span class="badge bg-light text-dark ms-1">45 views</span>
+                                    </div>
+                                    <small class="text-muted">Last activity: 2 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Discussion Topic 2 -->
+                    <div class="list-item">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="user-avatar bg-info">
+                                    JS
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">Question about Assignment 2 - Chapter 5 concepts</h6>
+                                        <small class="text-muted">
+                                            by John Smith • Nov 18, 2024 3:45 PM
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-info">Question</span>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    I'm having trouble understanding the relationship between memory hierarchy and cache performance. Could someone explain...
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-light text-dark">7 replies</span>
+                                        <span class="badge bg-light text-dark ms-1">124 views</span>
+                                    </div>
+                                    <small class="text-muted">Last activity: 30 minutes ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Discussion Topic 3 -->
+                    <div class="list-item">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="user-avatar bg-success">
+                                    MJ
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">Study Group for Midterm Exam</h6>
+                                        <small class="text-muted">
+                                            by Mary Johnson • Nov 17, 2024 11:20 AM
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-warning text-dark">Study Group</span>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    Hi everyone! I'm organizing a study group for the upcoming midterm. We'll meet this weekend to review...
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-light text-dark">12 replies</span>
+                                        <span class="badge bg-light text-dark ms-1">89 views</span>
+                                    </div>
+                                    <small class="text-muted">Last activity: 1 hour ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Discussion Topic 4 -->
+                    <div class="list-item">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="user-avatar bg-warning">
+                                    AK
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">Recommended Reading Materials</h6>
+                                        <small class="text-muted">
+                                            by Alex Kim • Nov 16, 2024 9:15 AM
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-secondary">Resource</span>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    I found some great supplementary materials that helped me understand processor design. Sharing the links here...
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-light text-dark">5 replies</span>
+                                        <span class="badge bg-light text-dark ms-1">67 views</span>
+                                    </div>
+                                    <small class="text-muted">Last activity: 4 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Discussion Topic 5 -->
+                    <div class="list-item">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <div class="user-avatar bg-danger">
+                                    RM
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">Technical Issues with Lab Equipment</h6>
+                                        <small class="text-muted">
+                                            by Robert Martinez • Nov 15, 2024 2:30 PM
+                                        </small>
+                                    </div>
+                                    <span class="badge bg-danger">Technical</span>
+                                </div>
+                                <p class="text-muted mb-2">
+                                    Has anyone else experienced issues with the simulation software in Lab 3? The program keeps crashing when...
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-light text-dark">8 replies</span>
+                                        <span class="badge bg-light text-dark ms-1">156 views</span>
+                                    </div>
+                                    <small class="text-muted">Last activity: 6 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <small class="text-muted">Showing 1-5 of 5 topics</small>
+                    <nav>
+                        <ul class="pagination pagination-sm mb-0">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discussion Statistics -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-chart-bar me-2"></i>
+            Discussion Activity
+        </div>
+        
+        <div class="card-content">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-primary mb-1">5</div>
+                        <small class="text-muted">Total Topics</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-success mb-1">23</div>
+                        <small class="text-muted">Total Posts</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-warning mb-1">2</div>
+                        <small class="text-muted">Your Posts</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3">
+                        <div class="h3 text-info mb-1">481</div>
+                        <small class="text-muted">Total Views</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discussion Guidelines -->
+    <div class="content-card">
+        <div class="card-title">
+            <i class="fas fa-info-circle me-2"></i>
+            Discussion Guidelines
+        </div>
+        
+        <div class="card-content">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Do's</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Be respectful and professional
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Stay on topic
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Provide helpful and constructive feedback
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Use clear and descriptive titles
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6>Don'ts</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            Post inappropriate content
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            Share assignment answers directly
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            Use offensive language
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            Post spam or irrelevant content
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Discussion interaction handlers
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle topic clicks
+        document.querySelectorAll('.list-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (!e.target.closest('.btn')) {
+                    // Navigate to topic detail (placeholder)
+                    console.log('Navigate to topic detail');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

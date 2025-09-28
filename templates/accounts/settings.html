@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - CTA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --ug-red: #8B0000;
+            --ug-gold: #FFD700;
+            --ug-blue: #1e3a8a;
+            --ug-light-blue: #3b82f6;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .settings-container {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .settings-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, var(--ug-red), var(--ug-blue));
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 2rem;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--ug-gold);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--ug-blue);
+            font-weight: 500;
+            padding: 1rem 1.5rem;
+            margin-right: 0.5rem;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--ug-gold);
+            color: var(--ug-red);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            padding: 2rem;
+        }
+
+        .form-label {
+            color: var(--ug-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--ug-gold);
+            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ug-red), var(--ug-blue));
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--ug-gold);
+            margin: 1rem 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid var(--ug-gold);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--ug-gold);
+            color: var(--ug-red);
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--ug-gold);
+            color: var(--ug-red);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .back-btn {
+                position: static;
+                margin-bottom: 1rem;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'accounts:dashboard' %}" class="back-btn">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    </a>
+
+    <div class="container settings-container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="settings-card">
+                    <div class="settings-header">
+                        <h2 class="mb-0"><i class="fas fa-cog me-2"></i>Account Settings</h2>
+                        <p class="mb-0 mt-2 opacity-75">Manage your account preferences and security</p>
+                    </div>
+
+                    <!-- Display messages -->
+                    {% if messages %}
+                        <div class="p-3">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Navigation Tabs -->
+                    <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab">
+                                <i class="fas fa-user me-2"></i>Profile
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button" role="tab">
+                                <i class="fas fa-shield-alt me-2"></i>Security
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" data-bs-target="#preferences" type="button" role="tab">
+                                <i class="fas fa-sliders-h me-2"></i>Preferences
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="settingsTabContent">
+                        <!-- Profile Tab -->
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="info-card">
+                                            <h5><i class="fas fa-camera me-2"></i>Profile Picture</h5>
+                                            {% if profile.profile_picture %}
+                                                <img src="{{ profile.profile_picture.url }}" alt="Profile" class="profile-picture-preview">
+                                            {% else %}
+                                                <img src="https://via.placeholder.com/120x120?text=No+Image" alt="No Profile" class="profile-picture-preview">
+                                            {% endif %}
+                                            <div class="mb-3">
+                                                <label for="profile_picture" class="form-label">Change Picture</label>
+                                                <input type="file" class="form-control" name="profile_picture" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="info-card">
+                                            <h5><i class="fas fa-info-circle me-2"></i>Personal Information</h5>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="first_name" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="last_name" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email" value="{{ user.email }}">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="phone_number" class="form-label">Phone Number</label>
+                                                    <input type="tel" class="form-control" name="phone_number" value="{{ profile.phone_number }}">
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label for="address" class="form-label">Address</label>
+                                                    <textarea class="form-control" name="address" rows="3">{{ profile.address }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Update Profile
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div class="tab-pane fade" id="security" role="tabpanel">
+                            <div class="info-card">
+                                <h5><i class="fas fa-key me-2"></i>Change Password</h5>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="old_password" class="form-label">Current Password</label>
+                                            <input type="password" class="form-control" name="old_password" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="new_password" class="form-label">New Password</label>
+                                            <input type="password" class="form-control" name="new_password" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                                            <input type="password" class="form-control" name="confirm_password" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-shield-alt me-2"></i>Change Password
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="info-card">
+                                <h5><i class="fas fa-info-circle me-2"></i>Account Information</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Username:</strong> {{ user.username }}</p>
+                                        <p><strong>Role:</strong> {{ profile.get_role_display }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                                        <p><strong>Last Login:</strong> {{ user.last_login|date:"F j, Y g:i A"|default:"Never" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preferences Tab -->
+                        <div class="tab-pane fade" id="preferences" role="tabpanel">
+                            <div class="info-card">
+                                <h5><i class="fas fa-palette me-2"></i>Display Preferences</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="theme" class="form-label">Theme</label>
+                                        <select class="form-select" name="theme">
+                                            <option value="light" selected>Light</option>
+                                            <option value="dark">Dark</option>
+                                            <option value="auto">Auto</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="language" class="form-label">Language</label>
+                                        <select class="form-select" name="language">
+                                            <option value="en" selected>English</option>
+                                            <option value="fr">French</option>
+                                            <option value="es">Spanish</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-card">
+                                <h5><i class="fas fa-bell me-2"></i>Notification Settings</h5>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="email_notifications" checked>
+                                    <label class="form-check-label" for="email_notifications">
+                                        Email Notifications
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="grade_notifications" checked>
+                                    <label class="form-check-label" for="grade_notifications">
+                                        Grade Updates
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="attendance_notifications">
+                                    <label class="form-check-label" for="attendance_notifications">
+                                        Attendance Reminders
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

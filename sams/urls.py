@@ -25,6 +25,7 @@ urlpatterns = [
     path('courses/', include('courses.urls')),
     path('grades/', include('grades.urls')),
     path('attendance/', include('attendance.urls')),
+    path('calendar/', include('calendar_app.urls')),
 ]
 
 # Serve media files during development

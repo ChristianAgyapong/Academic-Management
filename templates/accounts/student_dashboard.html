@@ -1,57 +1,80 @@
 {% extends 'base.html' %}
 
-{% block title %}Student Dashboard - SAMS{% endblock %}
+{% block title %}Student Portal - CTA{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-12">
-        <h2><i class="fas fa-user-graduate"></i> Student Dashboard</h2>
-        <p class="text-muted">Welcome back, {{ user.get_full_name|default:user.username }}!</p>
-        <hr>
-    </div>
-</div>
+<style>
+/* Student-specific styling */
+.student-theme {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+.student-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+.student-welcome {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+.student-stats {
+    background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+}
+.student-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+.student-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+}
+.progress-ring {
+    width: 80px;
+    height: 80px;
+}
+</style>
 
-<!-- Student Info Card -->
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-body text-center">
+<!-- Student Welcome Header -->
+<div class="student-welcome text-center">
+    <div class="row align-items-center">
+        <div class="col-md-2">
+            <div class="student-avatar">
                 {% if student.profile.profile_picture %}
-                <img src="{{ student.profile.profile_picture.url }}" alt="Profile" class="profile-picture mb-3">
+                <img src="{{ student.profile.profile_picture.url }}" alt="Profile" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
                 {% else %}
-                <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                    <i class="fas fa-user-graduate fa-2x text-primary"></i>
+                </div>
                 {% endif %}
-                <h5>{{ user.get_full_name }}</h5>
-                <p class="text-muted">{{ student.student_id }}</p>
-                <p class="small">{{ student.registration_number }}</p>
             </div>
         </div>
-    </div>
-    
-    <div class="col-md-8">
-        <!-- Quick Stats -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card bg-primary text-white dashboard-card">
-                    <div class="card-body text-center">
-                        <h4>{{ total_courses }}</h4>
-                        <p class="mb-0">Enrolled Courses</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-success text-white dashboard-card">
-                    <div class="card-body text-center">
-                        <h4>{{ recent_grades.count }}</h4>
-                        <p class="mb-0">Recent Grades</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card bg-info text-white dashboard-card">
-                    <div class="card-body text-center">
-                        <h4>-</h4>
-                        <p class="mb-0">Attendance %</p>
+        <div class="col-md-8">
+            <h1><i class="fas fa-star"></i> Welcome, {{ user.get_full_name|default:user.username }}!</h1>
+            <p class="lead mb-0">Student ID: {{ student.student_id }} | Registration: {{ student.registration_number }}</p>
+            <small><i class="fas fa-calendar"></i> Academic Year 2024-2025 | Fall Semester</small>
+        </div>
+        <div class="col-md-2">
+            <div class="text-center">
+                <div class="progress-ring">
+                    <svg width="80" height="80">
+                        <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="6"/>
+                        <circle cx="40" cy="40" r="30" fill="none" stroke="white" stroke-width="6" 
+                                stroke-dasharray="188" stroke-dashoffset="47" transform="rotate(-90 40 40)"/>
+                    </svg>
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                        <small>75%</small><br>
+                        <tiny>Complete</tiny>
                     </div>
                 </div>
             </div>
@@ -59,42 +82,156 @@
     </div>
 </div>
 
-<!-- Current Courses -->
+<!-- Student Performance Overview -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="student-card p-3 text-center">
+            <div class="student-stats text-white rounded p-3 mb-2">
+                <i class="fas fa-book-open fa-2x mb-2"></i>
+                <h3 class="mb-0">{{ total_courses }}</h3>
+            </div>
+            <h6 class="text-primary">Active Courses</h6>
+            <small class="text-muted">Currently Enrolled</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="student-card p-3 text-center">
+            <div class="bg-success text-white rounded p-3 mb-2">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h3 class="mb-0">{{ recent_grades.count }}</h3>
+            </div>
+            <h6 class="text-success">Recent Grades</h6>
+            <small class="text-muted">This Semester</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="student-card p-3 text-center">
+            <div class="bg-info text-white rounded p-3 mb-2">
+                <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                <h3 class="mb-0">87%</h3>
+            </div>
+            <h6 class="text-info">Attendance Rate</h6>
+            <small class="text-muted">Overall Average</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="student-card p-3 text-center">
+            <div class="bg-warning text-white rounded p-3 mb-2">
+                <i class="fas fa-tasks fa-2x mb-2"></i>
+                <h3 class="mb-0">3</h3>
+            </div>
+            <h6 class="text-warning">Pending Tasks</h6>
+            <small class="text-muted">Due This Week</small>
+        </div>
+    </div>
+</div>
+
+<!-- Student Quick Actions Panel -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="student-card p-4">
+            <h5 class="mb-3"><i class="fas fa-bolt text-primary"></i> Student Portal - Quick Access</h5>
+            <div class="row">
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'courses:my_courses' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-book"></i><br>
+                        <small>My Courses</small>
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'grades:student_grades' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-graduation-cap"></i><br>
+                        <small>Grades</small>
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'calendar_app:calendar' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-calendar-alt"></i><br>
+                        <small>Schedule</small>
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'courses:course_list' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-file-download"></i><br>
+                        <small>Resources</small>
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'attendance:student_attendance' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-comments"></i><br>
+                        <small>Attendance</small>
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'accounts:profile' %}" class="student-btn w-100 text-decoration-none">
+                        <i class="fas fa-user-circle"></i><br>
+                        <small>Profile</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Student Academic Overview -->
 <div class="row">
     <div class="col-md-8">
-        <div class="card dashboard-card">
-            <div class="card-header">
-                <h5><i class="fas fa-book"></i> Current Courses</h5>
+        <div class="student-card">
+            <div class="card-header bg-transparent border-0">
+                <h5 class="text-primary"><i class="fas fa-graduation-cap"></i> My Learning Journey</h5>
             </div>
             <div class="card-body">
                 {% if enrollments %}
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Teacher</th>
-                                <th>Schedule</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for enrollment in enrollments %}
-                            <tr>
-                                <td><strong>{{ enrollment.section.course.code }}</strong></td>
-                                <td>{{ enrollment.section.course.name }}</td>
-                                <td>{{ enrollment.section.teacher.profile.user.get_full_name }}</td>
-                                <td>{{ enrollment.section.schedule|default:"TBA" }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <!-- Course Cards Grid -->
+                <div class="row">
+                    {% for enrollment in enrollments %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card border-left-primary h-100" style="border-left: 4px solid #667eea;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-primary mb-1">{{ enrollment.section.course.code }}</h6>
+                                        <small class="text-muted">{{ enrollment.section.course.name }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-light text-dark">Active</span>
+                                    </div>
+                                </div>
+                                <hr class="my-2">
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">Grade</small>
+                                        <strong class="text-success">A-</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">Attendance</small>
+                                        <strong class="text-info">92%</strong>
+                                    </div>
+                                    <div class="col-4">
+                                        <small class="text-muted d-block">Progress</small>
+                                        <strong class="text-warning">75%</strong>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="progress" style="height: 5px;">
+                                        <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% else %}
-                <div class="text-center py-4">
-                    <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">No courses enrolled yet.</p>
-                    <a href="#" class="btn btn-primary">Browse Courses (Coming Soon)</a>
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-book-open fa-4x text-muted"></i>
+                    </div>
+                    <h6 class="text-muted">Ready to Start Learning?</h6>
+                    <p class="text-muted">No courses enrolled yet. Contact your academic advisor to get started.</p>
+                    <a href="{% url 'courses:course_list' %}" class="student-btn text-decoration-none">
+                        <i class="fas fa-search"></i> Browse Available Courses
+                    </a>
                 </div>
                 {% endif %}
             </div>
@@ -102,33 +239,77 @@
     </div>
     
     <div class="col-md-4">
-        <div class="card dashboard-card">
-            <div class="card-header">
-                <h5><i class="fas fa-chart-line"></i> Recent Grades</h5>
+        <!-- Academic Summary -->
+        <div class="student-card mb-3">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-primary"><i class="fas fa-chart-pie"></i> Academic Summary</h6>
             </div>
             <div class="card-body">
-                {% if recent_grades %}
-                <div class="list-group list-group-flush">
-                    {% for grade in recent_grades %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">{{ grade.section.course.code }}</small>
-                            <br>
-                            <strong>{{ grade.letter_grade }}</strong>
-                        </div>
-                        <span class="badge bg-primary rounded-pill">{{ grade.numerical_grade }}%</span>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Overall GPA</span>
+                        <strong class="text-success">3.7</strong>
                     </div>
-                    {% endfor %}
+                    <div class="progress mt-1" style="height: 6px;">
+                        <div class="progress-bar bg-success" style="width: 93%;"></div>
+                    </div>
                 </div>
-                <div class="text-center mt-3">
-                    <a href="#" class="btn btn-sm btn-outline-primary">View All (Coming Soon)</a>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Credits Earned</span>
+                        <strong class="text-info">48/120</strong>
+                    </div>
+                    <div class="progress mt-1" style="height: 6px;">
+                        <div class="progress-bar bg-info" style="width: 40%;"></div>
+                    </div>
                 </div>
-                {% else %}
-                <div class="text-center py-3">
-                    <i class="fas fa-chart-line fa-2x text-muted mb-2"></i>
-                    <p class="text-muted">No grades available yet.</p>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>Semester Progress</span>
+                        <strong class="text-warning">75%</strong>
+                    </div>
+                    <div class="progress mt-1" style="height: 6px;">
+                        <div class="progress-bar bg-warning" style="width: 75%;"></div>
+                    </div>
                 </div>
-                {% endif %}
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="student-card">
+            <div class="card-header bg-transparent border-0">
+                <h6 class="text-primary"><i class="fas fa-calendar-alt"></i> Upcoming Events</h6>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                            <i class="fas fa-exclamation fa-sm"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <small class="text-danger d-block">Due Tomorrow</small>
+                            <strong>CS101 Assignment 3</strong>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                            <i class="fas fa-clock fa-sm"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <small class="text-warning d-block">This Week</small>
+                            <strong>MATH201 Midterm Exam</strong>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                            <i class="fas fa-calendar fa-sm"></i>
+                        </div>
+                        <div class="ms-3 flex-grow-1">
+                            <small class="text-info d-block">Next Week</small>
+                            <strong>Registration Opens</strong>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

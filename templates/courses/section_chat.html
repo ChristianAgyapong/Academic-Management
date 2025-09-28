@@ -1,0 +1,381 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+    <!-- Chat Room Card -->
+    <div class="content-card">
+        <div class="d-flex align-items-center justify-content-between card-title">
+            <span>
+                <i class="fas fa-comments me-2"></i>
+                Course Chat Room
+            </span>
+            <div>
+                <span class="badge bg-success me-2">
+                    <i class="fas fa-circle"></i> 12 Online
+                </span>
+                <a href="#" class="link-btn">
+                    <i class="fas fa-link"></i> Link
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-content" style="height: 500px; display: flex; flex-direction: column;">
+            <!-- Chat Messages Area -->
+            <div class="chat-messages flex-grow-1 mb-3" style="overflow-y: auto; border: 1px solid #e5e5e5; border-radius: 4px; padding: 1rem; background: #fafafa;">
+                
+                <!-- Welcome Message -->
+                <div class="message-item system-message mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-info-circle text-info me-2"></i>
+                        <small class="text-muted">Welcome to {{ section.course.code }} chat room. Please be respectful and stay on topic.</small>
+                    </div>
+                </div>
+                
+                <!-- Sample Messages -->
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-primary me-3">
+                            {{ section.teacher.profile.user.username|slice:":2"|upper }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="text-primary me-2">{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</strong>
+                                <span class="badge bg-warning text-dark">Instructor</span>
+                                <small class="text-muted ms-auto">2 hours ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                Good morning everyone! Don't forget about the midterm exam next week. Study guide is available in the Resources section.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-success me-3">
+                            JS
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="me-2">John Smith</strong>
+                                <span class="badge bg-info">Student</span>
+                                <small class="text-muted ms-auto">1 hour ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                Thank you Professor! Will the exam cover everything from chapters 1-6?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-primary me-3">
+                            {{ section.teacher.profile.user.username|slice:":2"|upper }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="text-primary me-2">{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</strong>
+                                <span class="badge bg-warning text-dark">Instructor</span>
+                                <small class="text-muted ms-auto">45 minutes ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                @John Smith Yes, that's correct. Focus on the key concepts we discussed in class and the practice problems.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-info me-3">
+                            MJ
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="me-2">Mary Johnson</strong>
+                                <span class="badge bg-info">Student</span>
+                                <small class="text-muted ms-auto">30 minutes ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                Is anyone else having trouble with the cache performance calculations? I could use some help with the practice problems.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-warning me-3">
+                            AK
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="me-2">Alex Kim</strong>
+                                <span class="badge bg-info">Student</span>
+                                <small class="text-muted ms-auto">25 minutes ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                @Mary Johnson I can help! I figured out the formula. Want to form a study group?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-danger me-3">
+                            RM
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="me-2">Robert Martinez</strong>
+                                <span class="badge bg-info">Student</span>
+                                <small class="text-muted ms-auto">20 minutes ago</small>
+                            </div>
+                            <div class="message-content p-2 bg-white border rounded">
+                                Count me in for the study group! When and where should we meet?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message-item mb-3">
+                    <div class="d-flex">
+                        <div class="user-avatar bg-success me-3">
+                            {{ request.user.username|slice:":2"|upper }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-1">
+                                <strong class="me-2">You</strong>
+                                <span class="badge bg-info">Student</span>
+                                <small class="text-muted ms-auto">just now</small>
+                            </div>
+                            <div class="message-content p-2 bg-light border rounded border-primary">
+                                I'm interested in joining the study group too. Let me know the details!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <!-- Message Input Area -->
+            <div class="chat-input">
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control" id="messageInput" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
+                    <button class="btn btn-primary" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </div>
+                <small class="text-muted mt-1 d-block">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Press Enter to send. Be respectful and stay on topic.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Online Users & Chat Info -->
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Chat Guidelines -->
+            <div class="content-card">
+                <div class="card-title">
+                    <i class="fas fa-rules me-2"></i>
+                    Chat Guidelines
+                </div>
+                
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Chat Rules</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Stay on topic and course-related
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Be respectful to all participants
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Use appropriate language
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    Help fellow students when possible
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Features</h6>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-at text-info me-2"></i>
+                                    Use @username to mention someone
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-clock text-info me-2"></i>
+                                    Messages are timestamped
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-eye text-info me-2"></i>
+                                    See who's online in real-time
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-history text-info me-2"></i>
+                                    Chat history is preserved
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Online Users -->
+            <div class="content-card">
+                <div class="card-title">
+                    <i class="fas fa-users me-2"></i>
+                    Online Users (12)
+                </div>
+                
+                <div class="card-content">
+                    <div class="online-users">
+                        <!-- Instructor -->
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-primary me-2">
+                                {{ section.teacher.profile.user.username|slice:":2"|upper }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</div>
+                                <small class="text-warning">Instructor</small>
+                            </div>
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        
+                        <!-- Students -->
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-success me-2">{{ request.user.username|slice:":2"|upper }}</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">You</div>
+                                <small class="text-info">Student</small>
+                            </div>
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-info me-2">JS</div>
+                            <div class="flex-grow-1">
+                                <div>John Smith</div>
+                                <small class="text-info">Student</small>
+                            </div>
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-warning me-2">MJ</div>
+                            <div class="flex-grow-1">
+                                <div>Mary Johnson</div>
+                                <small class="text-info">Student</small>
+                            </div>
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-danger me-2">AK</div>
+                            <div class="flex-grow-1">
+                                <div>Alex Kim</div>
+                                <small class="text-info">Student</small>
+                            </div>
+                            <i class="fas fa-circle text-success"></i>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="user-avatar bg-secondary me-2">RM</div>
+                            <div class="flex-grow-1">
+                                <div>Robert Martinez</div>
+                                <small class="text-info">Student</small>
+                            </div>
+                            <i class="fas fa-circle text-warning"></i>
+                        </div>
+                        
+                        <small class="text-muted mt-2">+6 more users online</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value.trim();
+        
+        if (message === '') {
+            return;
+        }
+        
+        // Create new message element
+        const messagesContainer = document.querySelector('.chat-messages');
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message-item mb-3';
+        
+        messageElement.innerHTML = `
+            <div class="d-flex">
+                <div class="user-avatar bg-success me-3">
+                    {{ request.user.username|slice:":2"|upper }}
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-1">
+                        <strong class="me-2">You</strong>
+                        <span class="badge bg-info">Student</span>
+                        <small class="text-muted ms-auto">just now</small>
+                    </div>
+                    <div class="message-content p-2 bg-light border rounded border-primary">
+                        ${escapeHtml(message)}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+        // Clear input
+        messageInput.value = '';
+        
+        // In a real implementation, you would send this to the server via WebSocket or AJAX
+        console.log('Message sent:', message);
+    }
+    
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // Auto-scroll to bottom on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const messagesContainer = document.querySelector('.chat-messages');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+    
+    // Simulate real-time updates (in a real app, this would be WebSocket)
+    setInterval(function() {
+        // Update online user count randomly
+        const onlineCount = Math.floor(Math.random() * 5) + 8; // 8-12 users
+        document.querySelector('.badge.bg-success').innerHTML = `<i class="fas fa-circle"></i> ${onlineCount} Online`;
+    }, 30000); // Update every 30 seconds
+</script>
+{% endblock %}

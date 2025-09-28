@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Student Academic Management System{% endblock %}</title>
+    <title>{% block title %}Chrix Tech Academic{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     {% load static %}
@@ -12,11 +12,25 @@
 <body>
     <!-- Navigation -->
     {% if user.is_authenticated %}
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #4a4a7a 0%, #6b5b8f 100%);"
+    {% if user.profile.role == 'student' %}
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="container">
             <a class="navbar-brand" href="{% url 'accounts:dashboard' %}">
-                <i class="fas fa-graduation-cap"></i> SAMS
+                <i class="fas fa-user-graduate"></i> Student Portal
             </a>
+    {% elif user.profile.role == 'teacher' %}
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #2c3e50 0%, #e74c3c 100%);">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accounts:dashboard' %}">
+                <i class="fas fa-chalkboard-teacher"></i> Faculty Portal
+            </a>
+    {% else %}
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #4a4a7a 0%, #6b5b8f 100%);">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'accounts:dashboard' %}">
+                <i class="fas fa-graduation-cap"></i> CTA Admin
+            </a>
+    {% endif %}
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -33,33 +47,43 @@
                     {% if user.profile.role == 'student' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'courses:my_courses' %}">
-                            <i class="fas fa-book"></i> My Courses
+                            <i class="fas fa-book-open"></i> My Learning
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'grades:student_grades' %}">
-                            <i class="fas fa-chart-line"></i> Grades
+                            <i class="fas fa-graduation-cap"></i> My Grades
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'attendance:student_attendance' %}">
-                            <i class="fas fa-calendar-check"></i> Attendance
+                            <i class="fas fa-calendar-check"></i> My Attendance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-download"></i> Resources
                         </a>
                     </li>
                     {% elif user.profile.role == 'teacher' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'courses:teacher_sections' %}">
-                            <i class="fas fa-chalkboard-teacher"></i> My Sections
+                            <i class="fas fa-chalkboard-teacher"></i> My Classes
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'grades:teacher_grading_sections' %}">
-                            <i class="fas fa-edit"></i> Grading
+                            <i class="fas fa-edit"></i> Gradebook
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'attendance:teacher_attendance_sections' %}">
-                            <i class="fas fa-user-check"></i> Attendance
+                            <i class="fas fa-user-check"></i> Roll Call
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-chart-bar"></i> Analytics
                         </a>
                     </li>
                     {% elif user.profile.role == 'admin' %}
@@ -77,14 +101,50 @@
                 </ul>
                 
                 <ul class="navbar-nav">
+                    {% if user.profile.role == 'student' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-warning rounded-pill">3</span>
+                        </a>
+                    </li>
+                    {% elif user.profile.role == 'teacher' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-tasks"></i>
+                            <span class="badge bg-danger rounded-pill">{{ pending_grades|default:5 }}</span>
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user"></i> {{ user.get_full_name|default:user.username }}
+                            {% if user.profile.role == 'student' %}
+                            <i class="fas fa-user-graduate"></i> {{ user.get_full_name|default:user.username }}
+                            {% elif user.profile.role == 'teacher' %}
+                            <i class="fas fa-user-tie"></i> {{ user.get_full_name|default:user.username }}
+                            {% else %}
+                            <i class="fas fa-user-shield"></i> {{ user.get_full_name|default:user.username }}
+                            {% endif %}
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">
-                                <i class="fas fa-user-edit"></i> Profile
+                                <i class="fas fa-user-edit"></i> My Profile
                             </a></li>
+                            {% if user.profile.role == 'student' %}
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-cog"></i> Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-question-circle"></i> Help & Support
+                            </a></li>
+                            {% elif user.profile.role == 'teacher' %}
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs"></i> Class Settings
+                            </a></li>
+                            <li><a class="dropdown-item" href="#">
+                                <i class="fas fa-book"></i> Faculty Resources
+                            </a></li>
+                            {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">
                                 <i class="fas fa-sign-out-alt"></i> Logout

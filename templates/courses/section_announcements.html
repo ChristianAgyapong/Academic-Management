@@ -1,0 +1,115 @@
+{% extends 'courses/section_base.html' %}
+
+{% block section_content %}
+<!-- Announcements Filter -->
+<div class="content-card">
+    <div class="card-header">
+        View Announcements
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <select class="form-control form-control-sm">
+                    <option>All announcements</option>
+                    <option>Last 30 days</option>
+                    <option>Last 60 days</option>
+                    <option>Last 365 days</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary btn-sm">Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcements List -->
+<div class="content-card">
+    <div class="card-header">
+        Course Announcements
+    </div>
+    <div class="card-body p-0">
+
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>From</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>Welcome to {{ section.course.code }}!</strong>
+                        <br><small class="text-muted">Welcome to the new semester! Please familiarize yourself with the course syllabus...</small>
+                    </td>
+                    <td>{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</td>
+                    <td><small>Jan 15, 2024<br>9:00 AM</small></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm">View</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <strong>Midterm Examination Schedule</strong>
+                        <br><small class="text-muted">The midterm examination is scheduled for November 15, 2024...</small>
+                    </td>
+                    <td>{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</td>
+                    <td><small>Nov 1, 2024<br>2:30 PM</small></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm">View</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Assignment 3 Due Date Extended</strong>
+                        <br><small class="text-muted">Due to technical difficulties, the due date has been extended...</small>
+                    </td>
+                    <td>{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</td>
+                    <td><small>Oct 28, 2024<br>4:15 PM</small></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm">View</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Guest Lecture This Friday</strong>
+                        <br><small class="text-muted">Special guest lecturer discussing industry applications...</small>
+                    </td>
+                    <td>{{ section.teacher.profile.user.get_full_name|default:section.teacher.profile.user.username }}</td>
+                    <td><small>Oct 25, 2024<br>10:00 AM</small></td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm">View</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add New Announcement (For Instructors) -->
+{% if user.profile.role == 'teacher' %}
+<div class="content-card">
+    <div class="card-header">
+        Post New Announcement
+    </div>
+    <div class="card-body">
+        <form>
+            <div class="form-group mb-3">
+                <label for="announcementSubject">Subject</label>
+                <input type="text" class="form-control form-control-sm" id="announcementSubject" placeholder="Announcement subject">
+            </div>
+            <div class="form-group mb-3">
+                <label for="announcementBody">Message</label>
+                <textarea class="form-control form-control-sm" id="announcementBody" rows="4" placeholder="Enter your announcement here..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Post Announcement</button>
+            <button type="button" class="btn btn-secondary btn-sm ml-2">Cancel</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
