@@ -187,3 +187,134 @@ class TeacherRegistrationForm(UserCreationForm):
         if Teacher.objects.filter(employee_id=employee_id).exists():
             raise forms.ValidationError("Employee ID already exists.")
         return employee_id
+
+class BasicInformationForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter first name'
+    }))
+    last_name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control', 
+        'placeholder': 'Enter last name'
+    }))
+    
+    class Meta:
+        model = Profile
+        fields = ['date_of_birth', 'bio']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }),
+            'bio': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Tell us about yourself'
+            })
+        }
+
+class NamePronunciationForm(forms.ModelForm):
+    pronunciation_guide = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'How to pronounce your name'
+        })
+    )
+    preferred_pronouns = forms.CharField(
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'e.g., he/him, she/her, they/them'
+        })
+    )
+    
+    class Meta:
+        model = Profile
+        fields = ['pronunciation_guide', 'preferred_pronouns']
+
+class ContactInformationForm(forms.ModelForm):
+    email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter email address'
+    }))
+    
+    class Meta:
+        model = Profile
+        fields = ['phone_number', 'address']
+        widgets = {
+            'phone_number': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter phone number'
+            }),
+            'address': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Enter your address'
+            })
+        }
+
+class StudentInformationForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = ['emergency_contact', 'guardian_name', 'guardian_phone', 'medical_conditions']
+        widgets = {
+            'emergency_contact': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Emergency contact person'
+            }),
+            'guardian_name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Guardian/Parent name'
+            }),
+            'guardian_phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Guardian phone number'
+            }),
+            'medical_conditions': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Any medical conditions or allergies'
+            })
+        }
+
+class StaffInformationForm(forms.ModelForm):
+    class Meta:
+        model = Teacher
+        fields = ['department', 'qualification', 'specialization', 'office_hours', 'research_interests']
+        widgets = {
+            'department': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Department name'
+            }),
+            'qualification': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Highest qualification'
+            }),
+            'specialization': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Area of specialization'
+            }),
+            'office_hours': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g., Mon-Fri 9:00-11:00 AM'
+            }),
+            'research_interests': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Research areas and interests'
+            })
+        }
+
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['profile_picture']
+        widgets = {
+            'profile_picture': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': 'image/*'
+            })
+        }

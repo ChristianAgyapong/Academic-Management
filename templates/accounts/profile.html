@@ -182,6 +182,61 @@
             text-decoration: underline;
         }
 
+        .connections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .connection-item {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+
+        .breadcrumb {
+            background: none;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb-item {
+            color: #6c757d;
+        }
+
+        .breadcrumb-item.active {
+            color: #2c3e50;
+        }
+
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: ">";
+            color: #6c757d;
+            margin: 0 8px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-bottom: 15px;
+            }
+            
+            .container-main {
+                padding: 15px;
+            }
+            
+            .profile-card {
+                padding: 20px;
+            }
+        }
+
         .btn-edit {
             background: linear-gradient(135deg, #4a4a7a 0%, #6b5b8f 100%);
             border: none;
@@ -329,6 +384,14 @@
 
     <!-- Main Content -->
     <div class="container-main">
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+            <span class="breadcrumb-item">
+                <a href="{% url 'accounts:dashboard' %}" style="color: #3498db; text-decoration: none;">Home</a>
+            </span>
+            <span class="breadcrumb-item active">Profile</span>
+        </nav>
+
         <!-- Alert Messages -->
         {% if messages %}
             {% for message in messages %}
@@ -359,19 +422,53 @@
             <div class="col-lg-8">
                 <div class="profile-card">
                     <h3 class="card-title">Basic Information</h3>
-                    <div class="section-title">You haven't filled out any information yet</div>
-                    <button class="edit-button">
+                    {% if user.first_name or user.last_name or user.profile.date_of_birth or user.profile.bio %}
+                        <div class="info-row">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value">{{ user.get_full_name|default:"Not provided" }}</span>
+                        </div>
+                        {% if user.profile.date_of_birth %}
+                        <div class="info-row">
+                            <span class="info-label">Date of Birth</span>
+                            <span class="info-value">{{ user.profile.date_of_birth|date:"F d, Y" }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.profile.bio %}
+                        <div class="info-row">
+                            <span class="info-label">About</span>
+                            <span class="info-value">{{ user.profile.bio }}</span>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="section-title">You haven't filled out any information yet</div>
+                    {% endif %}
+                    <a href="{% url 'accounts:edit_basic_info' %}" class="edit-button">
                         <i class="fas fa-edit"></i> Edit
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Name Pronunciation and Pronouns -->
                 <div class="profile-card">
                     <h3 class="card-title">Name Pronunciation and Pronouns</h3>
-                    <div class="section-title">You haven't filled out any information yet</div>
-                    <button class="edit-button">
+                    {% if user.profile.pronunciation_guide or user.profile.preferred_pronouns %}
+                        {% if user.profile.pronunciation_guide %}
+                        <div class="info-row">
+                            <span class="info-label">Pronunciation</span>
+                            <span class="info-value">{{ user.profile.pronunciation_guide }}</span>
+                        </div>
+                        {% endif %}
+                        {% if user.profile.preferred_pronouns %}
+                        <div class="info-row">
+                            <span class="info-label">Pronouns</span>
+                            <span class="info-value">{{ user.profile.preferred_pronouns }}</span>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="section-title">You haven't filled out any information yet</div>
+                    {% endif %}
+                    <a href="{% url 'accounts:edit_name_pronunciation' %}" class="edit-button">
                         <i class="fas fa-edit"></i> Edit
-                    </button>
+                    </a>
                 </div>
 
                 <!-- Contact Information -->
@@ -379,21 +476,58 @@
                     <h3 class="card-title">Contact Information</h3>
                     <div class="info-row">
                         <span class="info-label">Email</span>
-                        <span class="info-value">{{ user.email|default:"cagyapong017@st.ug.edu.gh" }}</span>
-                        <button class="edit-button">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
+                        <span class="info-value">{{ user.email|default:"Not provided" }}</span>
                     </div>
+                    {% if user.profile.phone_number %}
+                    <div class="info-row">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value">{{ user.profile.phone_number }}</span>
+                    </div>
+                    {% endif %}
+                    {% if user.profile.address %}
+                    <div class="info-row">
+                        <span class="info-label">Address</span>
+                        <span class="info-value">{{ user.profile.address }}</span>
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'accounts:edit_contact_info' %}" class="edit-button">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 </div>
 
                 <!-- Staff Information -->
                 {% if user.profile.role == 'teacher' and user.profile.teacher %}
                 <div class="profile-card">
                     <h3 class="card-title">Staff Information</h3>
-                    <div class="section-title">You haven't filled out any information yet</div>
-                    <button class="edit-button">
+                    <div class="info-row">
+                        <span class="info-label">Employee ID</span>
+                        <span class="info-value">{{ user.profile.teacher.employee_id }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Department</span>
+                        <span class="info-value">{{ user.profile.teacher.department|default:"Not provided" }}</span>
+                    </div>
+                    {% if user.profile.teacher.qualification %}
+                    <div class="info-row">
+                        <span class="info-label">Qualification</span>
+                        <span class="info-value">{{ user.profile.teacher.qualification }}</span>
+                    </div>
+                    {% endif %}
+                    {% if user.profile.teacher.specialization %}
+                    <div class="info-row">
+                        <span class="info-label">Specialization</span>
+                        <span class="info-value">{{ user.profile.teacher.specialization }}</span>
+                    </div>
+                    {% endif %}
+                    {% if user.profile.teacher.office_hours %}
+                    <div class="info-row">
+                        <span class="info-label">Office Hours</span>
+                        <span class="info-value">{{ user.profile.teacher.office_hours }}</span>
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'accounts:edit_staff_info' %}" class="edit-button">
                         <i class="fas fa-edit"></i> Edit
-                    </button>
+                    </a>
                 </div>
                 {% endif %}
 
@@ -409,12 +543,33 @@
                         <span class="info-label">Registration</span>
                         <span class="info-value">{{ user.profile.student.registration_number }}</span>
                     </div>
+                    {% if user.profile.student.admission_date %}
+                    <div class="info-row">
+                        <span class="info-label">Admission Date</span>
+                        <span class="info-value">{{ user.profile.student.admission_date|date:"F d, Y" }}</span>
+                    </div>
+                    {% endif %}
+                    {% if user.profile.student.emergency_contact %}
+                    <div class="info-row">
+                        <span class="info-label">Emergency Contact</span>
+                        <span class="info-value">{{ user.profile.student.emergency_contact }}</span>
+                    </div>
+                    {% endif %}
+                    {% if user.profile.student.guardian_name %}
+                    <div class="info-row">
+                        <span class="info-label">Guardian</span>
+                        <span class="info-value">{{ user.profile.student.guardian_name }}</span>
+                    </div>
+                    {% endif %}
                     <div class="info-row">
                         <span class="info-label">Status</span>
                         <span class="info-value">
                             {% if user.profile.student.is_active %}Active{% else %}Inactive{% endif %}
                         </span>
                     </div>
+                    <a href="{% url 'accounts:edit_student_info' %}" class="edit-button">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
                 </div>
                 {% endif %}
 

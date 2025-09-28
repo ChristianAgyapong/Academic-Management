@@ -1,0 +1,32 @@
+{% extends 'accounts/edit_base.html' %}
+
+{% block title %}Name Pronunciation & Pronouns{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="{{ form.pronunciation_guide.id_for_label }}" class="form-label">Name Pronunciation</label>
+    {{ form.pronunciation_guide }}
+    <div class="help-text">Help others pronounce your name correctly (e.g., "CHRIS-tian ah-GYA-pong")</div>
+    {% if form.pronunciation_guide.errors %}
+        <div class="text-danger small">{{ form.pronunciation_guide.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.preferred_pronouns.id_for_label }}" class="form-label">Preferred Pronouns</label>
+    {{ form.preferred_pronouns }}
+    <div class="help-text">Let others know how to refer to you (e.g., he/him, she/her, they/them)</div>
+    {% if form.preferred_pronouns.errors %}
+        <div class="text-danger small">{{ form.preferred_pronouns.errors }}</div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.querySelector('.edit-title');
+        const subtitle = document.querySelector('.edit-subtitle');
+        if (title) title.textContent = 'Name Pronunciation and Pronouns';
+        if (subtitle) subtitle.textContent = 'Help others address you correctly and respectfully';
+    });
+</script>
+{% endblock %}

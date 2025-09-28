@@ -1,0 +1,41 @@
+{% extends 'accounts/edit_base.html' %}
+
+{% block title %}Contact Information{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="{{ form.email.id_for_label }}" class="form-label">Email Address *</label>
+    {{ form.email }}
+    <div class="help-text">This will be used for important notifications and password recovery</div>
+    {% if form.email.errors %}
+        <div class="text-danger small">{{ form.email.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+    {{ form.phone_number }}
+    <div class="help-text">Include country code if international (e.g., +233-XX-XXX-XXXX)</div>
+    {% if form.phone_number.errors %}
+        <div class="text-danger small">{{ form.phone_number.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.address.id_for_label }}" class="form-label">Address</label>
+    {{ form.address }}
+    <div class="help-text">Your current residential address</div>
+    {% if form.address.errors %}
+        <div class="text-danger small">{{ form.address.errors }}</div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.querySelector('.edit-title');
+        const subtitle = document.querySelector('.edit-subtitle');
+        if (title) title.textContent = 'Contact Information';
+        if (subtitle) subtitle.textContent = 'Update your contact details for communication';
+    });
+</script>
+{% endblock %}

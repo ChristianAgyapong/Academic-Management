@@ -1,0 +1,70 @@
+{% extends 'accounts/edit_base.html' %}
+
+{% block title %}Change Profile Picture{% endblock %}
+{% block form_enctype %}multipart/form-data{% endblock %}
+
+{% block form_content %}
+{% if user.profile.profile_picture %}
+<div class="current-picture" style="text-align: center; margin-bottom: 30px;">
+    <h6 style="color: #6c757d; margin-bottom: 15px;">Current Profile Picture</h6>
+    <img src="{{ user.profile.profile_picture.url }}" 
+         alt="Current Profile Picture" 
+         style="width: 120px; height: 120px; border-radius: 10px; object-fit: cover; border: 2px solid #e9ecef;">
+    <div style="margin-top: 15px;">
+        <form method="post" action="{% url 'accounts:delete_profile_picture' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background: #e74c3c; color: white; padding: 8px 15px; font-size: 0.8rem;"
+                    onclick="return confirm('Are you sure you want to delete your profile picture?')">
+                <i class="fas fa-trash me-1"></i>Delete Picture
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<div class="form-group">
+    <label for="{{ form.profile_picture.id_for_label }}" class="form-label">Choose New Picture</label>
+    {{ form.profile_picture }}
+    <div class="help-text">
+        Select a new profile picture. Supported formats: JPG, PNG, GIF. Max size: 5MB.
+        <br>For best results, use a square image (1:1 ratio).
+    </div>
+    {% if form.profile_picture.errors %}
+        <div class="text-danger small">{{ form.profile_picture.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="preview-container" style="text-align: center; margin: 20px 0; display: none;">
+    <h6 style="color: #6c757d; margin-bottom: 10px;">Preview</h6>
+    <img id="image-preview" src="" alt="Preview" 
+         style="width: 120px; height: 120px; border-radius: 10px; object-fit: cover; border: 2px solid #e9ecef;">
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.querySelector('.edit-title');
+        const subtitle = document.querySelector('.edit-subtitle');
+        if (title) title.textContent = 'Change Profile Picture';
+        if (subtitle) subtitle.textContent = 'Upload a new profile picture to personalize your account';
+        
+        // Image preview functionality
+        const fileInput = document.getElementById('{{ form.profile_picture.id_for_label }}');
+        const previewContainer = document.querySelector('.preview-container');
+        const previewImage = document.getElementById('image-preview');
+        
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -6,7 +6,11 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import JsonResponse
 from .models import Profile, Student, Teacher, UserRole
-from .forms import LoginForm, StudentRegistrationForm, TeacherRegistrationForm, ProfileUpdateForm, ForgotPasswordForm, ResetPasswordForm
+from .forms import (
+    LoginForm, StudentRegistrationForm, TeacherRegistrationForm, ProfileUpdateForm, 
+    ForgotPasswordForm, ResetPasswordForm, BasicInformationForm, NamePronunciationForm,
+    ContactInformationForm, StudentInformationForm, StaffInformationForm, ProfilePictureForm
+)
 from courses.models import Enrollment, Section
 from grades.models import FinalGrade
 from attendance.models import AttendanceSummary
@@ -576,5 +580,162 @@ def toggle_pin_view(request):
                 'success': False,
                 'error': str(e)
             }, status=400)
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+
+@login_required
+def edit_basic_information(request):
+    """Edit basic personal information"""
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        form = BasicInformationForm(request.POST, instance=profile, user=request.user)
+        if form.is_valid():
+            # Update user fields
+            request.user.first_name = form.cleaned_data['first_name']
+            request.user.last_name = form.cleaned_data['last_name']
+            request.user.save()
+            
+            # Update profile fields
+            form.save()
+            messages.success(request, 'Basic information updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = BasicInformationForm(instance=profile, user=request.user)
+    
+    return render(request, 'accounts/edit_basic_info.html', {'form': form})
+
+@login_required
+def edit_name_pronunciation(request):
+    """Edit name pronunciation and pronouns"""
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        form = NamePronunciationForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Name pronunciation and pronouns updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = NamePronunciationForm(instance=profile)
+    
+    return render(request, 'accounts/edit_name_pronunciation.html', {'form': form})
+
+@login_required
+def edit_contact_information(request):
+    """Edit contact information"""
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        form = ContactInformationForm(request.POST, instance=profile)
+        if form.is_valid():
+            # Update email in User model
+            request.user.email = form.cleaned_data['email']
+            request.user.save()
+            
+            # Update profile fields
+            form.save()
+            messages.success(request, 'Contact information updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = ContactInformationForm(instance=profile)
+        form.fields['email'].initial = request.user.email
+    
+    return render(request, 'accounts/edit_contact_info.html', {'form': form})
+
+@login_required
+def edit_student_information(request):
+    """Edit student-specific information"""
+    if request.user.profile.role != 'student':
+        messages.error(request, 'Access denied. Student account required.')
+        return redirect('accounts:profile')
+    
+    try:
+        student = request.user.profile.student
+    except Student.DoesNotExist:
+        messages.error(request, 'Student profile not found.')
+        return redirect('accounts:profile')
+    
+    if request.method == 'POST':
+        form = StudentInformationForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Student information updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = StudentInformationForm(instance=student)
+    
+    return render(request, 'accounts/edit_student_info.html', {'form': form})
+
+@login_required
+def edit_staff_information(request):
+    """Edit staff-specific information"""
+    if request.user.profile.role != 'teacher':
+        messages.error(request, 'Access denied. Staff account required.')
+        return redirect('accounts:profile')
+    
+    try:
+        teacher = request.user.profile.teacher
+    except Teacher.DoesNotExist:
+        messages.error(request, 'Staff profile not found.')
+        return redirect('accounts:profile')
+    
+    if request.method == 'POST':
+        form = StaffInformationForm(request.POST, instance=teacher)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Staff information updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = StaffInformationForm(instance=teacher)
+    
+    return render(request, 'accounts/edit_staff_info.html', {'form': form})
+
+@login_required
+def change_profile_picture(request):
+    """Change profile picture"""
+    profile = request.user.profile
+    
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile picture updated successfully!')
+            return redirect('accounts:profile')
+    else:
+        form = ProfilePictureForm(instance=profile)
+    
+    return render(request, 'accounts/change_picture.html', {'form': form})
+
+@login_required
+def delete_profile_picture(request):
+    """Delete profile picture"""
+    if request.method == 'POST':
+        profile = request.user.profile
+        if profile.profile_picture:
+            profile.profile_picture.delete()
+            profile.save()
+            messages.success(request, 'Profile picture deleted successfully!')
+        else:
+            messages.info(request, 'No profile picture to delete.')
+        return redirect('accounts:profile')
+    return redirect('accounts:profile')
+
+@login_required
+def update_status(request):
+    """Update user status message"""
+    if request.method == 'POST':
+        status_message = request.POST.get('status_message', '').strip()
+        
+        # You can save this to a separate UserStatus model or Profile model
+        # For now, we'll use the bio field
+        profile = request.user.profile
+        profile.bio = status_message
+        profile.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Status updated successfully!'
+        })
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)

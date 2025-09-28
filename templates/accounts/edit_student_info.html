@@ -1,0 +1,50 @@
+{% extends 'accounts/edit_base.html' %}
+
+{% block title %}Student Information{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="{{ form.emergency_contact.id_for_label }}" class="form-label">Emergency Contact Person</label>
+    {{ form.emergency_contact }}
+    <div class="help-text">Name of person to contact in case of emergency</div>
+    {% if form.emergency_contact.errors %}
+        <div class="text-danger small">{{ form.emergency_contact.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.guardian_name.id_for_label }}" class="form-label">Guardian/Parent Name</label>
+    {{ form.guardian_name }}
+    <div class="help-text">Full name of your parent or guardian</div>
+    {% if form.guardian_name.errors %}
+        <div class="text-danger small">{{ form.guardian_name.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.guardian_phone.id_for_label }}" class="form-label">Guardian Phone Number</label>
+    {{ form.guardian_phone }}
+    <div class="help-text">Phone number of your parent or guardian</div>
+    {% if form.guardian_phone.errors %}
+        <div class="text-danger small">{{ form.guardian_phone.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.medical_conditions.id_for_label }}" class="form-label">Medical Conditions</label>
+    {{ form.medical_conditions }}
+    <div class="help-text">Any medical conditions, allergies, or special requirements we should know about</div>
+    {% if form.medical_conditions.errors %}
+        <div class="text-danger small">{{ form.medical_conditions.errors }}</div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.querySelector('.edit-title');
+        const subtitle = document.querySelector('.edit-subtitle');
+        if (title) title.textContent = 'Student Information';
+        if (subtitle) subtitle.textContent = 'Update your academic and emergency information';
+    });
+</script>
+{% endblock %}

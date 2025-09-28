@@ -20,6 +20,9 @@ class Profile(models.Model):
     address = models.TextField(blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profiles/', blank=True)
+    bio = models.TextField(blank=True, help_text="Tell us about yourself")
+    pronunciation_guide = models.CharField(max_length=200, blank=True, help_text="How to pronounce your name")
+    preferred_pronouns = models.CharField(max_length=50, blank=True, help_text="e.g., he/him, she/her, they/them")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -37,6 +40,10 @@ class Student(models.Model):
     admission_date = models.DateField()
     graduation_date = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
+    emergency_contact = models.CharField(max_length=100, blank=True)
+    guardian_name = models.CharField(max_length=100, blank=True)
+    guardian_phone = models.CharField(max_length=15, blank=True)
+    medical_conditions = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.student_id} - {self.profile.user.get_full_name()}"
@@ -53,6 +60,9 @@ class Teacher(models.Model):
     experience_years = models.PositiveIntegerField(default=0)
     join_date = models.DateField()
     is_active = models.BooleanField(default=True)
+    specialization = models.CharField(max_length=200, blank=True)
+    office_hours = models.CharField(max_length=100, blank=True)
+    research_interests = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.employee_id} - {self.profile.user.get_full_name()}"

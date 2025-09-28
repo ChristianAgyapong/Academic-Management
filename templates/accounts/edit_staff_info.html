@@ -1,0 +1,59 @@
+{% extends 'accounts/edit_base.html' %}
+
+{% block title %}Staff Information{% endblock %}
+
+{% block form_content %}
+<div class="form-group">
+    <label for="{{ form.department.id_for_label }}" class="form-label">Department</label>
+    {{ form.department }}
+    <div class="help-text">Your academic department or faculty</div>
+    {% if form.department.errors %}
+        <div class="text-danger small">{{ form.department.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.qualification.id_for_label }}" class="form-label">Highest Qualification</label>
+    {{ form.qualification }}
+    <div class="help-text">Your highest academic degree or professional qualification</div>
+    {% if form.qualification.errors %}
+        <div class="text-danger small">{{ form.qualification.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.specialization.id_for_label }}" class="form-label">Area of Specialization</label>
+    {{ form.specialization }}
+    <div class="help-text">Your primary area of expertise or specialization</div>
+    {% if form.specialization.errors %}
+        <div class="text-danger small">{{ form.specialization.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.office_hours.id_for_label }}" class="form-label">Office Hours</label>
+    {{ form.office_hours }}
+    <div class="help-text">When students can visit you (e.g., "Mon-Fri 9:00-11:00 AM")</div>
+    {% if form.office_hours.errors %}
+        <div class="text-danger small">{{ form.office_hours.errors }}</div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="{{ form.research_interests.id_for_label }}" class="form-label">Research Interests</label>
+    {{ form.research_interests }}
+    <div class="help-text">Your current research areas and academic interests</div>
+    {% if form.research_interests.errors %}
+        <div class="text-danger small">{{ form.research_interests.errors }}</div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.querySelector('.edit-title');
+        const subtitle = document.querySelector('.edit-subtitle');
+        if (title) title.textContent = 'Staff Information';
+        if (subtitle) subtitle.textContent = 'Update your professional and academic details';
+    });
+</script>
+{% endblock %}

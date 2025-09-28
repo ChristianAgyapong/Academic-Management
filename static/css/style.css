@@ -1,39 +1,91 @@
-/* Custom CSS for SAMS */
+/* Custom CSS for SAMS - HCI Compliant Color System */
 
 :root {
+    /* Primary Brand Colors - Dark Blue-Gray Theme */
     --primary-color: #4a4a7a;
+    --primary-light: #6b5b8f;
+    --primary-dark: #3a3a6a;
     --primary-gradient: linear-gradient(135deg, #4a4a7a 0%, #6b5b8f 50%, #7d6aa8 100%);
+    
+    /* Secondary Colors */
     --secondary-color: #6c757d;
+    --secondary-light: #8c9196;
+    --secondary-dark: #5a6268;
+    
+    /* Semantic Colors - HCI Compliant */
     --success-color: #28a745;
+    --success-light: #34ce57;
+    --success-dark: #1e7e34;
     --danger-color: #dc3545;
+    --danger-light: #e74c3c;
+    --danger-dark: #c82333;
     --warning-color: #ffc107;
+    --warning-light: #ffcd39;
+    --warning-dark: #e0a800;
     --info-color: #17a2b8;
+    --info-light: #20c9e7;
+    --info-dark: #138496;
+    
+    /* Neutral Colors */
     --light-color: #f8f9fa;
+    --lighter-color: #ffffff;
     --dark-color: #343a40;
+    --darker-color: #212529;
+    
+    /* Background Colors */
+    --bg-primary: #f4f6f9;
+    --bg-secondary: #e9ecef;
+    --bg-card: #ffffff;
+    --bg-overlay: rgba(74, 74, 122, 0.1);
+    
+    /* Text Colors - High Contrast for Accessibility */
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-muted: #95a5a6;
+    --text-light: #ffffff;
+    
+    /* Border Colors */
+    --border-light: #e9ecef;
+    --border-medium: #dee2e6;
+    --border-dark: #ced4da;
+    
+    /* Shadow Colors */
+    --shadow-light: rgba(0, 0, 0, 0.075);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --shadow-dark: rgba(0, 0, 0, 0.25);
+    
+    /* Interactive States */
+    --hover-overlay: rgba(74, 74, 122, 0.08);
+    --focus-shadow: rgba(74, 74, 122, 0.25);
+    --active-overlay: rgba(74, 74, 122, 0.15);
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     overflow-x: hidden;
+    line-height: 1.6;
 }
 
-/* Scrollbar styling for webkit browsers */
+/* Scrollbar styling for webkit browsers - HCI Compliant */
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--bg-secondary);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
     background: var(--primary-color);
     border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #6b5b8f;
+    background: var(--primary-light);
 }
 
 .navbar-brand {
